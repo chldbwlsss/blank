@@ -22,7 +22,7 @@ class QuestionRepositoryTest {
     }
 
     @Test
-    public void getQuestion() {
+    public void question_조회() {
 
         //given
         String content = "테스트 입니다.";

@@ -24,15 +24,18 @@ public class QuestionService {
         Question question = questionRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 질문을 찾을 수 없습니다. no= " + no));
 
-        question.update(requestDto.getContent());
+        question.updateQuestion(requestDto.getContent(), requestDto.getCategory());
 
         return no;
     }
 
+    @Transactional
     public QuestionResponseDto findByNo(Long no) {
-        Question entity = questionRepository.findById(no)
+        Question question = questionRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 질문을 찾을 수 없습니다. no= " + no));
 
-        return new QuestionResponseDto(entity);
+        question.plusViews();
+
+        return new QuestionResponseDto(question);
     }
 }
