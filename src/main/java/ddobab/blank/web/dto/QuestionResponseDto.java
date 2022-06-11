@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 public class QuestionResponseDto {
 
     private Long no;
+    private String categoryValue;
     private String content;
     private String writer;
     private Integer views;
 
     public QuestionResponseDto(Question question) {
         this.no = question.getNo();
+        this.categoryValue = String.valueOf(question.getCategory());
         this.content = question.getContent();
         this.writer = question.getWriter();
         this.views = question.getViews();

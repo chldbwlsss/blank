@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -75,10 +77,12 @@ class QuestionApiV1ControllerTest {
         //given
         String content = "content";
         String writer = "testUser";
+        String categoryEngValue = "ART";
 
         QuestionSaveRequestDto requestDto = QuestionSaveRequestDto.builder()
                 .content(content)
                 .writer(writer)
+                .categoryValue(categoryEngValue)
                 .build();
 
         Long savedNo = questionRepository.save(requestDto.toEntity()).getNo();
@@ -93,7 +97,38 @@ class QuestionApiV1ControllerTest {
         assertThat(responseEntity.getBody().getNo()).isEqualTo(savedNo);
         assertThat(responseEntity.getBody().getContent()).isEqualTo(content);
         assertThat(responseEntity.getBody().getWriter()).isEqualTo(writer);
+        assertThat(responseEntity.getBody().getCategoryValue()).isEqualTo(QuestionCategory.ART.toString());
         assertThat(responseEntity.getBody().getViews()).isEqualTo(1);
+    }
+
+    @Test
+    public void Question_수정() {
+
+    }
+
+    @Test
+    public void Question_삭제() {
+        //given
+        String content = "content";
+        String writer = "testUser";
+        String categoryEngValue = "ART";
+
+        QuestionSaveRequestDto requestDto = QuestionSaveRequestDto.builder()
+                .content(content)
+                .writer(writer)
+                .categoryValue(categoryEngValue)
+                .build();
+
+        Long savedNo = questionRepository.save(requestDto.toEntity()).getNo();
+
+        String url = "http://localhost:" + port + "/api/v1/question/" + savedNo;
+
+        //when
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNull();
 
     }
 
