@@ -32,6 +32,11 @@ public class QuestionApiV1Controller {
         return questionService.update(no, requestDto);
     }
 
+    @DeleteMapping("/{no}")
+    public void delete(@PathVariable Long no) {
+         questionService.delete(no);
+    }
+
     @GetMapping("/category")
     public QuestionCategory[] getCategoryList() {
         return QuestionCategory.values();

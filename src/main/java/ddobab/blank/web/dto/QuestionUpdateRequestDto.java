@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 public class QuestionUpdateRequestDto {
 
     private String content;
-    private QuestionCategory category;
+    private String categoryValue;
 
     @Builder
-    public QuestionUpdateRequestDto(String content, QuestionCategory category) {
+    public QuestionUpdateRequestDto(String content, String categoryValue) {
         this.content = content;
-        this.category = category;
+        this.categoryValue = categoryValue;
     }
 }
