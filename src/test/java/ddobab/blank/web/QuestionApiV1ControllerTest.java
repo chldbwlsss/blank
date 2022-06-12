@@ -6,6 +6,7 @@ import ddobab.blank.domain.question.QuestionRepository;
 import ddobab.blank.service.question.QuestionService;
 import ddobab.blank.web.dto.QuestionResponseDto;
 import ddobab.blank.web.dto.QuestionSaveRequestDto;
+import ddobab.blank.web.dto.QuestionUpdateRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -103,7 +105,35 @@ class QuestionApiV1ControllerTest {
 
     @Test
     public void Question_수정() {
+        //given
+        Question saveQuestion = questionRepository.save(Question.builder()
+                .content("testContent")
+                .writer("testWriter")
+                .category(QuestionCategory.ART)
+                .build());
 
+        Long toUpdateNo = saveQuestion.getNo();
+        String changedContent = "changeContent";
+        String changedCategory = "ECONOMY";
+
+        QuestionUpdateRequestDto updateRequestDto = QuestionUpdateRequestDto.builder()
+                .content(changedContent)
+                .categoryValue(changedCategory)
+                .build();
+
+        String url = "http://localhost:" + port + "/api/v1/question/" + toUpdateNo;
+
+        HttpEntity<QuestionUpdateRequestDto> requestEntity = new HttpEntity<>(updateRequestDto);
+
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        Question question = questionRepository.findById(toUpdateNo).get();
+        assertThat(question.getContent()).isEqualTo(changedContent);
+        assertThat(question.getCategory()).isEqualTo(QuestionCategory.ECONOMY);
     }
 
     @Test
@@ -125,11 +155,12 @@ class QuestionApiV1ControllerTest {
 
         //when
         ResponseEntity<Void> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, Void.class);
+        Optional<Question> question = questionRepository.findById(savedNo);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNull();
-
+        assertThat(question.isPresent()).isFalse();
     }
 
 }

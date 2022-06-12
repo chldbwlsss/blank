@@ -1,6 +1,7 @@
 package ddobab.blank.service.question;
 
 import ddobab.blank.domain.question.Question;
+import ddobab.blank.domain.question.QuestionCategory;
 import ddobab.blank.domain.question.QuestionRepository;
 import ddobab.blank.web.dto.QuestionResponseDto;
 import ddobab.blank.web.dto.QuestionSaveRequestDto;
@@ -34,7 +35,7 @@ public class QuestionService {
         Question question = questionRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 질문을 찾을 수 없습니다."));
 
-        question.updateQuestion(requestDto.getContent(), requestDto.getCategory());
+        question.updateQuestion(requestDto.getContent(), QuestionCategory.valueOf(requestDto.getCategoryValue()));
 
         return no;
     }
