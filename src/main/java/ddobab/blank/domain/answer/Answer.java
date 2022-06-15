@@ -16,8 +16,8 @@ import javax.persistence.*;
 @Entity
 public class Answer extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ANSWER_NO")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
     @Column(length = 500, nullable = false)

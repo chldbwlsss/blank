@@ -11,8 +11,8 @@ import javax.persistence.*;
 @Entity
 public class AnswerImg {
 
-    @Column(name = "ANSWER_NO")
-    @Id
+    @Column(name = "ANSWER_IMG_NO")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
     @ManyToOne

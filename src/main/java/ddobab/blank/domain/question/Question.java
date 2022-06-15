@@ -17,8 +17,8 @@ import javax.persistence.*;
 @Entity
 public class Question extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "QUESTION_NO")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
     @Column(columnDefinition = "Text", length = 500, nullable = false)
@@ -26,7 +26,6 @@ public class Question extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "USER_NO")
-    @Column(nullable = false)
     private User user;
 
     @ColumnDefault("0")

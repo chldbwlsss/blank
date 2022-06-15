@@ -11,11 +11,12 @@ import javax.persistence.*;
 @DynamicInsert
 @Getter
 @NoArgsConstructor
+@Table(name="USERS")
 @Entity
 public class User extends BaseTimeEntity {
 
-    @Id @Column(name = "USER_NO")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_NO")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
     @Column(nullable = false)
