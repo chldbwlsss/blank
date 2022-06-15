@@ -2,6 +2,7 @@ package ddobab.blank.domain.question;
 
 
 import ddobab.blank.domain.BaseTimeEntity;
+import ddobab.blank.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,10 @@ public class Question extends BaseTimeEntity {
     @Column(columnDefinition = "Text", length = 500, nullable = false)
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "USER_NO")
     @Column(nullable = false)
-    private String writer;
+    private User user;
 
     @ColumnDefault("0")
     private Integer views;
@@ -34,9 +37,9 @@ public class Question extends BaseTimeEntity {
     private QuestionCategory category;
 
     @Builder
-    public Question(String content, String writer, QuestionCategory category) {
+    public Question(String content, User user, QuestionCategory category) {
         this.content = content;
-        this.writer = writer;
+        this.user = user;
         this.category = category;
     }
 

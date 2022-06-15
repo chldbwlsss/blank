@@ -22,7 +22,7 @@ class QuestionRepositoryTest {
     }
 
     @Test
-    public void question_조회() {
+    public void findById() {
 
         //given
         String content = "테스트 입니다.";
@@ -30,15 +30,16 @@ class QuestionRepositoryTest {
 
         questionRepository.save(Question.builder()
                 .content(content)
-                .writer(writer)
+//                .writer(writer)
                 .build());
 
         //when
         List<Question> questionList = questionRepository.findAll();
+//        Question question = questionRepository.findById()
 
         //then
         Question question = questionList.get(0);
         assertThat(question.getContent()).isEqualTo(content);
-        assertThat(question.getWriter()).isEqualTo(writer);
+//        assertThat(question.getWriter()).isEqualTo(writer);
     }
 }
