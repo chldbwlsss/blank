@@ -3,6 +3,7 @@ package ddobab.blank.web;
 import ddobab.blank.domain.question.Question;
 import ddobab.blank.domain.question.QuestionCategory;
 import ddobab.blank.domain.question.QuestionRepository;
+import ddobab.blank.domain.user.User;
 import ddobab.blank.service.question.QuestionService;
 import ddobab.blank.web.dto.QuestionResponseDto;
 import ddobab.blank.web.dto.QuestionSaveRequestDto;
@@ -52,7 +53,7 @@ class QuestionApiV1ControllerTest {
 
         QuestionSaveRequestDto requestDto = QuestionSaveRequestDto.builder()
                 .content(content)
-                .writer(writer)
+//                .writer(writer)
                 .categoryValue(categoryEngValue)
                 .build();
 
@@ -67,7 +68,7 @@ class QuestionApiV1ControllerTest {
 
         List<Question> allQuestions = questionRepository.findAll();
         assertThat(allQuestions.get(0).getContent()).isEqualTo(content);
-        assertThat(allQuestions.get(0).getWriter()).isEqualTo(writer);
+//        assertThat(allQuestions.get(0).getWriter()).isEqualTo(writer);
         assertThat(allQuestions.get(0).getCategory()).isEqualTo(QuestionCategory.ART);
         assertThat(allQuestions.get(0).getViews()).isEqualTo(0);
 
@@ -75,15 +76,19 @@ class QuestionApiV1ControllerTest {
 
     @Test
     public void Question_조회() {
-
+        User user = User.builder()
+                .nickname("testNickname")
+                .email("testEmail")
+                .profileImgUrl("testProfileImg")
+                .build();
         //given
         String content = "content";
-        String writer = "testUser";
+        String writer = user.getNickname();
         String categoryEngValue = "ART";
 
         QuestionSaveRequestDto requestDto = QuestionSaveRequestDto.builder()
                 .content(content)
-                .writer(writer)
+//                .writer(writer)
                 .categoryValue(categoryEngValue)
                 .build();
 
@@ -105,10 +110,15 @@ class QuestionApiV1ControllerTest {
 
     @Test
     public void Question_수정() {
+        User user = User.builder()
+                .nickname("testNickname")
+                .email("testEmail")
+                .profileImgUrl("testProfileImg")
+                .build();
         //given
         Question saveQuestion = questionRepository.save(Question.builder()
                 .content("testContent")
-                .writer("testWriter")
+                .user(user)
                 .category(QuestionCategory.ART)
                 .build());
 
@@ -145,7 +155,7 @@ class QuestionApiV1ControllerTest {
 
         QuestionSaveRequestDto requestDto = QuestionSaveRequestDto.builder()
                 .content(content)
-                .writer(writer)
+//                .writer(writer)
                 .categoryValue(categoryEngValue)
                 .build();
 

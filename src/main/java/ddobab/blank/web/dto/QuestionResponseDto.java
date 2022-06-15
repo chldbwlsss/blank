@@ -18,7 +18,7 @@ public class QuestionResponseDto {
         this.no = question.getNo();
         this.categoryValue = String.valueOf(question.getCategory());
         this.content = question.getContent();
-        this.writer = question.getWriter();
+        this.writer = question.getUser().getNickname();
         this.views = question.getViews();
     }
 }
