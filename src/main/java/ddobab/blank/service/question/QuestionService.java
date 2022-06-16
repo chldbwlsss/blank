@@ -1,6 +1,7 @@
 package ddobab.blank.service.question;
 
 import ddobab.blank.domain.question.*;
+import ddobab.blank.domain.user.UserRepository;
 import ddobab.blank.web.dto.QuestionResponseDto;
 import ddobab.blank.web.dto.QuestionSaveRequestDto;
 import ddobab.blank.web.dto.QuestionUpdateRequestDto;
@@ -8,19 +9,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @RequiredArgsConstructor
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionImgRepository questionImgRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save(QuestionSaveRequestDto requestDto) {
-        return questionRepository.save(requestDto.toEntity()).getNo();  //저장된 question 'entity' 반환
+        Question toSaveQuestion = Question.builder()
+                                            .user(userRepository.findById(1L).get())  //id는 SecurityUtils로 받아오기
+                                            .content(requestDto.getContent())
+                                            .category(QuestionCategory.valueOf(requestDto.getCategoryValue()))
+                                            .build();
+        Question savedQuestion = questionRepository.save(toSaveQuestion);
+        //질문이미지 저장해야됨!!!
+        return savedQuestion.getNo();  //저장된 question 'entity' 반환
     }
 
     @Transactional
@@ -54,4 +59,6 @@ public class QuestionService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다."));
         questionRepository.deleteById(no);
     }
+
+
 }

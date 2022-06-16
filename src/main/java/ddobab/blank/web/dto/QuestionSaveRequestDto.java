@@ -1,8 +1,5 @@
 package ddobab.blank.web.dto;
 
-import ddobab.blank.domain.question.Question;
-import ddobab.blank.domain.question.QuestionCategory;
-import ddobab.blank.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +22,4 @@ public class QuestionSaveRequestDto {
         this.questionImgFiles = questionImgFiles;
     }
 
-    public Question toEntity() {
-        return Question.builder()
-                .content(content)
-                .category(QuestionCategory.valueOf(categoryValue))
-                .build();
-    }
 }
