@@ -1,15 +1,19 @@
-package ddobab.blank.config.auth;
+package ddobab.blank.security.config;
 
-import ddobab.blank.domain.user.Role;
+import ddobab.blank.security.service.CustomOAuth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+@RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig{
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -23,8 +27,11 @@ public class SecurityConfig{
                     .anyRequest().authenticated()
                 .and()
                     .logout()
-                       .logoutSuccessUrl("/")
-                .and();
+                    .logoutSuccessUrl("/")
+                .and()
+                    .oauth2Login()
+                        .userInfoEndpoint()
+                            .userService(customOAuth2UserService);
         return http.build();
     }
 }
