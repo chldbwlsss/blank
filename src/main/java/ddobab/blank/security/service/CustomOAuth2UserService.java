@@ -1,7 +1,7 @@
-package ddobab.blank.config.auth;
+package ddobab.blank.security.service;
 
-import ddobab.blank.config.auth.dto.OAuthAttributesDto;
-import ddobab.blank.config.auth.dto.SessionUserDto;
+import ddobab.blank.security.oauth2.dto.OAuthAttributesDto;
+import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.domain.user.User;
 import ddobab.blank.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;

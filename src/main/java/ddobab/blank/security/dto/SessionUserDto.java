@@ -1,4 +1,4 @@
-package ddobab.blank.config.auth.dto;
+package ddobab.blank.security.dto;
 
 import ddobab.blank.domain.user.User;
 import lombok.Getter;
