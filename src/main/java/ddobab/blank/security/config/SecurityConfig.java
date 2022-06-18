@@ -23,13 +23,14 @@ public class SecurityConfig{
                 .and()
                     .authorizeHttpRequests()
                     .antMatchers("/h2-console/**").permitAll()
-                    .antMatchers("/api/vi/**").permitAll()
+                    .antMatchers("/api/v1/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .logout()
                     .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
+                        .defaultSuccessUrl("http://localhost:3000")
                         .userInfoEndpoint()
                             .userService(customOAuth2UserService);
         return http.build();
