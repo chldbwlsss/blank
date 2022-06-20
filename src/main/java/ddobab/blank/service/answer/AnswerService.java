@@ -27,7 +27,7 @@ public class AnswerService {
     @Transactional
     public Long save(AnswerSaveRequestDto requestDto) {
         Answer toSaveAnswer = Answer.builder()
-                                        .user(userRepository.findById(1L).get())
+                                        .user(userRepository.findById(1L).get())  //id는 SecurityUtils로 받아오기
                                         .question(questionRepository.findById(1L).get())
                                         .content(requestDto.getContent())
                                         .build();

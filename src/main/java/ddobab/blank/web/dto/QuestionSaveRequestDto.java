@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionSaveRequestDto {
 
+    private Long userNo;
     private String content;
     private String categoryValue;
     private List<MultipartFile> questionImgFiles;
