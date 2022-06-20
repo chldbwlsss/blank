@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserApiV1Controller {
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<SessionUserDto> getSessionUser(@CookieValue("JSESSIONID") String sessionId, @SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser) {
         log.info("[GET] LOGIN-USER : {}", loginUser);
