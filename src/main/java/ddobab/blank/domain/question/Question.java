@@ -21,12 +21,12 @@ public class Question extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long no;
 
-    @Column(columnDefinition = "Text", length = 500, nullable = false)
-    private String content;
-
     @ManyToOne
     @JoinColumn(name = "USER_NO")
     private User user;
+
+    @Column(columnDefinition = "Text", length = 500, nullable = false)
+    private String content;
 
     @ColumnDefault("0")
     private Integer views;
@@ -36,9 +36,9 @@ public class Question extends BaseTimeEntity {
     private QuestionCategory category;
 
     @Builder
-    public Question(String content, User user, QuestionCategory category) {
-        this.content = content;
+    public Question(User user, String content, QuestionCategory category) {
         this.user = user;
+        this.content = content;
         this.category = category;
     }
 

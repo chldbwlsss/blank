@@ -1,10 +1,9 @@
 package ddobab.blank.web;
 
-import ddobab.blank.security.dto.SessionUserDto;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequestMapping("/api/v1/user")
@@ -17,4 +16,5 @@ public class UserApiV1Controller {
         log.info("SESSEION-ID : {}", sessionId);
         return new ResponseEntity<>(loginUser, loginUser!=null?HttpStatus.OK:HttpStatus.NO_CONTENT);
     }
+
 }
