@@ -1,11 +1,13 @@
-package ddobab.blank.config.auth.dto;
+package ddobab.blank.security.dto;
 
 import ddobab.blank.domain.user.User;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Getter
+@ToString
 public class SessionUserDto implements Serializable {
 
     private static final long serialVersionUID = 8385617491429165861L;

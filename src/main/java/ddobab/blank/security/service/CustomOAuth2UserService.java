@@ -1,7 +1,7 @@
-package ddobab.blank.config.auth;
+package ddobab.blank.security.service;
 
-import ddobab.blank.config.auth.dto.OAuthAttributesDto;
-import ddobab.blank.config.auth.dto.SessionUserDto;
+import ddobab.blank.security.oauth2.dto.OAuthAttributesDto;
+import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.domain.user.User;
 import ddobab.blank.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributesDto oAuthAttributesDto = OAuthAttributesDto.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = save(oAuthAttributesDto);
-        httpSession.setAttribute("user", new SessionUserDto(user));
+        httpSession.setAttribute("loginUser", new SessionUserDto(user));
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),

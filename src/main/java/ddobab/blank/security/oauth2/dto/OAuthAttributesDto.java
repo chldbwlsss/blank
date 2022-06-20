@@ -1,4 +1,4 @@
-package ddobab.blank.config.auth.dto;
+package ddobab.blank.security.oauth2.dto;
 
 import ddobab.blank.domain.user.Role;
 import ddobab.blank.domain.user.User;
