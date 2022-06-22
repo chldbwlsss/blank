@@ -46,7 +46,7 @@ public class QuestionApiV1Controller {
     }
 
     @GetMapping("/category")
-    public QuestionCategory[] getCategoryList() {
-        return QuestionCategory.values();
+    public ResponseEntity<QuestionCategory[]> getCategoryList() {
+        return new ResponseEntity<>(QuestionCategory.values(), HttpStatus.OK);
     }
 }
