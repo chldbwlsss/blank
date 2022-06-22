@@ -14,13 +14,17 @@ public class QuestionSaveRequestDto {
     private Long userNo;
     private String content;
     private String categoryValue;
-    private List<MultipartFile> questionImgFiles;
+//    private List<MultipartFile> questionImgFiles;
 
     @Builder
-    public QuestionSaveRequestDto(String content, String categoryValue, List<MultipartFile> questionImgFiles) {
+    public QuestionSaveRequestDto(Long userNo, String content, String categoryValue) {
+        this.userNo = userNo;
         this.content = content;
         this.categoryValue = categoryValue;
-        this.questionImgFiles = questionImgFiles;
+    }
+
+    public void setUserNo(Long userNo){
+        this.userNo = userNo;
     }
 
 }
