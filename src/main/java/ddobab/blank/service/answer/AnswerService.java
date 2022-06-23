@@ -25,15 +25,15 @@ public class AnswerService {
     private final AnswerImgRepository answerImgRepository;
 
     @Transactional
-    public Long save(AnswerSaveRequestDto requestDto) {
+    public AnswerResponseDto save(AnswerSaveRequestDto requestDto) {
         Answer toSaveAnswer = Answer.builder()
-                                        .user(userRepository.findById(1L).get())  //id는 SecurityUtils로 받아오기
-                                        .question(questionRepository.findById(1L).get())
+                                        .user(userRepository.findById(requestDto.getUserNo()).get())
+                                        .question(questionRepository.findById(requestDto.getQuestionNo()).get())
                                         .content(requestDto.getContent())
                                         .build();
         Answer savedAnswer = answerRepository.save(toSaveAnswer);
         //답변사진 저장해야됨!!!
-        return savedAnswer.getNo();
+        return new AnswerResponseDto(answerRepository.findById(savedAnswer.getNo()).get());
     }
 
     public List<AnswerResponseDto> findByQuestionNo(Long no) {
@@ -46,24 +46,24 @@ public class AnswerService {
     }
 
     @Transactional
-    public Long update(Long no, AnswerUpdateRequestDto requestDto) {
+    public AnswerResponseDto update(Long no, AnswerUpdateRequestDto requestDto) {
         Answer answer = answerRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다."));
         answer.updateAnswer(requestDto.getContent());
 
-        answerImgRepository.deleteByAnswerNo(no);
-        requestDto.getAnswerImgUrls()
-                .stream()
-                .map(imgUrl -> answerImgRepository.save(AnswerImg.builder()
-                        .answer(answer)
-                        .answerImgUrl(imgUrl)
-                        .build()));
-        return no;
+//        answerImgRepository.deleteByAnswerNo(no);
+//        requestDto.getAnswerImgUrls()
+//                .stream()
+//                .map(imgUrl -> answerImgRepository.save(AnswerImg.builder()
+//                        .answer(answer)
+//                        .answerImgUrl(imgUrl)
+//                        .build()));     !!!나중에 주석 제거
+        return new AnswerResponseDto(answerRepository.findById(no).get());
     }
 
     public void delete(Long no) {
         Answer answer = answerRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다."));
-        questionRepository.deleteById(no);
+        answerRepository.deleteById(no);
     }
 }

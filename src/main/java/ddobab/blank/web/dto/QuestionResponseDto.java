@@ -3,7 +3,9 @@ package ddobab.blank.web.dto;
 import ddobab.blank.domain.question.Question;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @NoArgsConstructor
 @Getter
 public class QuestionResponseDto {

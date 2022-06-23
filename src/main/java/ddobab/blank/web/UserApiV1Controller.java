@@ -16,6 +16,8 @@ public class UserApiV1Controller {
     @GetMapping
     public ResponseEntity<SessionUserDto> getSessionUser(@SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser) {
         log.info("[GET] LOGIN-USER : {}", loginUser);
+        log.info("SESSEION-ID : {}", sessionId);
+
         return new ResponseEntity<>(loginUser, loginUser!=null? HttpStatus.OK:HttpStatus.NO_CONTENT);
     }
 }

@@ -5,22 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class AnswerSaveRequestDto {
 
+    private Long userNo;
+    private Long questionNo;
     private String content;
-    private Long questionId;
-    private Long userId;
-    private List<MultipartFile> answerImgFiles;
+//    private List<MultipartFile> answerImgFiles;
 
     @Builder
-    public AnswerSaveRequestDto(String content, Long questionId, Long userId, List<MultipartFile> answerImgFiles) {
+    public AnswerSaveRequestDto(String content, Long questionNo, Long userNo) {
         this.content = content;
-        this.questionId = questionId;
-        this.userId = userId;
-        this.answerImgFiles = answerImgFiles;
+        this.questionNo = questionNo;
+        this.userNo = userNo;
+    }
+
+    public void setUserNo(Long userNo){
+        this.userNo = userNo;
     }
 }
