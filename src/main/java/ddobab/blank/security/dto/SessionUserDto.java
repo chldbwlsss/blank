@@ -12,13 +12,13 @@ public class SessionUserDto implements Serializable {
 
     private static final long serialVersionUID = 8385617491429165861L;
 
-    private Long userNo;
+    private Long no;
     private String nickname;
     private String email;
     private String profileImgUrl;
 
     public SessionUserDto(User user) {
-        this.userNo = user.getNo();
+        this.no = user.getNo();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.profileImgUrl = user.getProfileImgUrl();
