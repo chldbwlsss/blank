@@ -1,5 +1,6 @@
 package ddobab.blank.service.question;
 
+import ddobab.blank.domain.answer.AnswerRepository;
 import ddobab.blank.domain.question.*;
 import ddobab.blank.domain.user.Role;
 import ddobab.blank.domain.user.User;
@@ -11,11 +12,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionImgRepository questionImgRepository;
+    private final AnswerRepository answerRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -59,11 +64,29 @@ public class QuestionService {
         return new QuestionResponseDto(questionRepository.findById(no).get());
     }
 
+    @Transactional
     public void delete(Long no) {
-        Question question = questionRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다."));
-        questionRepository.deleteById(no);
+        answerRepository.deleteByQuestionNo(no);
+        questionRepository.delete(questionRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다.")));
+
     }
 
 
+    public List<QuestionResponseDto> findAllByUserNo(Long no) {
+        List<Question> questionList = questionRepository.findByUserNo(no);
+        List<QuestionResponseDto> responseDtoList = questionList.stream()
+                                                            .map(question -> new QuestionResponseDto(question))
+                                            .collect(Collectors.toList());
+
+        return responseDtoList;
+    }
+
+    public List<QuestionResponseDto> findTop3ByUserNo(Long no) {
+        List<Question> questionTop3List = questionRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
+        List<QuestionResponseDto> top3ResponseDtoList = questionTop3List.stream()
+                                                                .map(question -> new QuestionResponseDto(question))
+                                             .collect(Collectors.toList());
+        return top3ResponseDtoList;
+    }
 }

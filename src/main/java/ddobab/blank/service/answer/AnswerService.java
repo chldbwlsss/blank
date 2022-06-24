@@ -45,6 +45,23 @@ public class AnswerService {
         return responseDtoList;
     }
 
+    public List<AnswerResponseDto> findAllByUserNo(Long no) {
+        List<Answer> answerList = answerRepository.findByUserNo(no);
+        List<AnswerResponseDto> responseDtoList = answerList.stream()
+                                                    .map(answer -> new AnswerResponseDto(answer))
+                                        .collect(Collectors.toList());
+
+        return responseDtoList;
+    }
+
+    public List<AnswerResponseDto> findTop3ByUserNo(Long no) {
+        List<Answer> answerTop3List = answerRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
+        List<AnswerResponseDto> top3ResponseDtoList = answerTop3List.stream()
+                                                         .map(answer -> new AnswerResponseDto(answer))
+                                            .collect(Collectors.toList());
+        return top3ResponseDtoList;
+    }
+
     @Transactional
     public AnswerResponseDto update(Long no, AnswerUpdateRequestDto requestDto) {
         Answer answer = answerRepository.findById(no)
@@ -62,8 +79,7 @@ public class AnswerService {
     }
 
     public void delete(Long no) {
-        Answer answer = answerRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다."));
-        answerRepository.deleteById(no);
+        answerRepository.delete(answerRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다.")));
     }
 }
