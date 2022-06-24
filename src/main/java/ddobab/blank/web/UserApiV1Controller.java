@@ -2,22 +2,73 @@ package ddobab.blank.web;
 
 
 import ddobab.blank.security.dto.SessionUserDto;
+import ddobab.blank.service.answer.AnswerService;
+import ddobab.blank.service.question.QuestionService;
+import ddobab.blank.service.user.UserService;
+import ddobab.blank.web.dto.AnswerResponseDto;
+import ddobab.blank.web.dto.QuestionResponseDto;
+import ddobab.blank.web.dto.UserResponseDto;
+import ddobab.blank.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 @RestController
 public class UserApiV1Controller {
 
-    @GetMapping
-    public ResponseEntity<SessionUserDto> getSessionUser(@SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser) {
-        log.info("[GET] LOGIN-USER : {}", loginUser);
-        log.info("SESSEION-ID : {}", sessionId);
+    private final UserService userService;
+    private final QuestionService questionService;
+    private final AnswerService answerService;
 
-        return new ResponseEntity<>(loginUser, loginUser!=null? HttpStatus.OK:HttpStatus.NO_CONTENT);
+    @GetMapping
+    public ResponseEntity<SessionUserDto> getSessionUser(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser) {
+        log.info("[GET] LOGIN-USER : {}", loginUser);
+
+        return new ResponseEntity<>(loginUser, loginUser != null ? HttpStatus.OK : HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{no}")
+    public ResponseEntity<UserResponseDto> getUserProfile(@PathVariable Long no) {
+        return new ResponseEntity<>(userService.findByNo(no), HttpStatus.OK);
+    }
+
+    @PutMapping("/{no}")
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto) {
+        return new ResponseEntity<>(userService.update(no, requestDto), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{no}/delete")
+    public ResponseEntity<Void> delete(@PathVariable Long no) {
+        userService.delete(no);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{no}/question/all")
+    public ResponseEntity<List<QuestionResponseDto>> getAllQuestionsByUserNo(@PathVariable Long no) {
+        return new ResponseEntity<>(questionService.findAllByUserNo(no), HttpStatus.OK);
+    }
+
+    @GetMapping("/{no}/question/top3")
+    public ResponseEntity<List<QuestionResponseDto>> getQuestionTop3ByUserNo(@PathVariable Long no) {
+        return new ResponseEntity<>(questionService.findTop3ByUserNo(no), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{no}/answer/all")
+    public ResponseEntity<List<AnswerResponseDto>> getAllAnswersByUserNo(@PathVariable Long no) {
+        return new ResponseEntity<>(answerService.findAllByUserNo(no), HttpStatus.OK);
+    }
+
+    @GetMapping("/{no}/answer/top3")
+    public ResponseEntity<List<AnswerResponseDto>> getAnswerTop3ByUserNo(@PathVariable Long no) {
+        return new ResponseEntity<>(answerService.findTop3ByUserNo(no), HttpStatus.OK);
     }
 }
