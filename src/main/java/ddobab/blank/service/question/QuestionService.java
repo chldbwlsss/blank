@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,10 +92,9 @@ public class QuestionService {
     }
 
     public List<QuestionResponseDto> getTop5ByViews() {
-        LocalDate twoDaysAgo = LocalDate.now().minusDays(2);
-        LocalDate today = LocalDate.now();
+        LocalDateTime twoDaysAgo = LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.of(0,0,0));
 
-        List<Question> questionTop5List = questionRepository.findTop5ByCreatedDateBetweenAndViewsOrderByCreatedDateDesc(twoDaysAgo, today);
+        List<Question> questionTop5List = questionRepository.findTop5ByCreatedDateGreaterThanOrderByViews(twoDaysAgo);
         List<QuestionResponseDto> top5ResponseDtoList = questionTop5List.stream()
                                                                 .map(question -> new QuestionResponseDto(question))
                                              .collect(Collectors.toList());

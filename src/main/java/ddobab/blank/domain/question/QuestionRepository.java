@@ -3,6 +3,7 @@ package ddobab.blank.domain.question;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
@@ -17,6 +18,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word);
 
-    List<Question> findTop5ByCreatedDateBetweenAndViewsOrderByCreatedDateDesc(LocalDate twoDaysAgo, LocalDate today);
-
+    List<Question> findTop5ByCreatedDateGreaterThanOrderByViews(LocalDateTime twoDaysAgo);
 }
