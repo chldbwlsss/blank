@@ -21,17 +21,16 @@ public class SearchService {
 
     private final QuestionRepository questionRepository;
 
-    public List<QuestionResponseDto> getSearchedQuestion(SearchRequestDto requestDto) {
-        log.info("requestDto = {}", requestDto);
+    public List<QuestionResponseDto> getSearchedQuestion(String categoryValue, String word) {
 
-        if (requestDto.getCategory().equals("NONE")) {
-            List<Question> searchedList = questionRepository.findByContentContainingIgnoreCaseOrderByCreatedDateDesc(requestDto.getWord());
+        if ("NONE".equals(categoryValue)) {
+            List<Question> searchedList = questionRepository.findByContentContainingIgnoreCaseOrderByCreatedDateDesc(word);
             List<QuestionResponseDto> responseDtoList = searchedList.stream()
                                                          .map(question -> new QuestionResponseDto(question))
                                                 .collect(Collectors.toList());
             return responseDtoList;
         } else {
-            List<Question> searchedList = questionRepository.findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory.valueOf(requestDto.getCategory()), requestDto.getWord());
+            List<Question> searchedList = questionRepository.findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory.valueOf(categoryValue), word);
             List<QuestionResponseDto> responseDtoList = searchedList.stream()
                                                         .map(question -> new QuestionResponseDto(question))
                                                  .collect(Collectors.toList());

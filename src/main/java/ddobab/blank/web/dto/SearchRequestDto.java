@@ -10,6 +10,6 @@ import lombok.ToString;
 @Getter
 public class SearchRequestDto {
 
-    private String category;
+    private String categoryValue;
     private String word;
 }

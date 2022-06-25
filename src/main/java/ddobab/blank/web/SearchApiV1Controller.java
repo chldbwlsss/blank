@@ -18,8 +18,9 @@ public class SearchApiV1Controller {
     private final SearchService searchService;
 
     @GetMapping("/question")
-    public ResponseEntity<List<QuestionResponseDto>> searchQuestion(@RequestBody SearchRequestDto requestDto) {
-        return new ResponseEntity<>(searchService.getSearchedQuestion(requestDto), HttpStatus.OK);
+    public ResponseEntity<List<QuestionResponseDto>> searchQuestion(@RequestParam("categoryValue") String categoryValue,
+                                                                    @RequestParam("word") String word) {
+        return new ResponseEntity<>(searchService.getSearchedQuestion(categoryValue, word), HttpStatus.OK);
     }
 
 }
