@@ -18,7 +18,7 @@ public class QuestionResponseDto {
 
     public QuestionResponseDto(Question question) {
         this.no = question.getNo();
-        this.categoryValue = String.valueOf(question.getCategory());
+        this.categoryValue = question.getCategory().getKorValue();
         this.content = question.getContent();
         this.writer = question.getUser().getNickname();
         this.views = question.getViews();
