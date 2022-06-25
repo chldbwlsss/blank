@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/question")
@@ -21,7 +23,7 @@ public class QuestionApiV1Controller {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<QuestionResponseDto> save(@SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
+    public ResponseEntity<QuestionResponseDto> save(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
         requestDto.setUserNo(loginUser.getNo());
 
         QuestionResponseDto savedQuestion = questionService.save(requestDto);
@@ -42,11 +44,16 @@ public class QuestionApiV1Controller {
     @DeleteMapping("/{no}")
     public ResponseEntity<Void> delete(@PathVariable Long no) {
         questionService.delete(no);
-         return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/category")
     public ResponseEntity<QuestionCategory[]> getCategoryList() {
         return new ResponseEntity<>(QuestionCategory.values(), HttpStatus.OK);
+    }
+
+    @GetMapping("/top5")
+    public ResponseEntity<List<QuestionResponseDto>> getQuestionTop5() {
+        return new ResponseEntity<>(questionService.getTop5ByViews(), HttpStatus.OK);
     }
 }
