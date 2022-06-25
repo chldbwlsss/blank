@@ -18,5 +18,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word);
 
-    List<Question> findTop5ByCreatedDateGreaterThanOrderByViews(LocalDateTime twoDaysAgo);
+    List<Question> findTop5ByCreatedDateGreaterThanOrderByViewsDesc(LocalDateTime twoDaysAgo);
 }

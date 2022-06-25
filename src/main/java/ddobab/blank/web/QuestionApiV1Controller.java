@@ -24,7 +24,7 @@ public class QuestionApiV1Controller {
 
     @PostMapping
     public ResponseEntity<QuestionResponseDto> save(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
-        requestDto.setUserNo(loginUser.getNo());
+//        requestDto.setUserNo(loginUser.getNo());
 
         QuestionResponseDto savedQuestion = questionService.save(requestDto);
         log.info("savedQuestion = {}", savedQuestion);

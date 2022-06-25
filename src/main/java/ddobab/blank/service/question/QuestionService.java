@@ -94,7 +94,7 @@ public class QuestionService {
     public List<QuestionResponseDto> getTop5ByViews() {
         LocalDateTime twoDaysAgo = LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.of(0,0,0));
 
-        List<Question> questionTop5List = questionRepository.findTop5ByCreatedDateGreaterThanOrderByViews(twoDaysAgo);
+        List<Question> questionTop5List = questionRepository.findTop5ByCreatedDateGreaterThanOrderByViewsDesc(twoDaysAgo);
         List<QuestionResponseDto> top5ResponseDtoList = questionTop5List.stream()
                                                                 .map(question -> new QuestionResponseDto(question))
                                              .collect(Collectors.toList());
