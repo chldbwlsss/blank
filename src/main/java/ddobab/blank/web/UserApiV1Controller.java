@@ -57,23 +57,23 @@ public class UserApiV1Controller {
     }
 
     @GetMapping("/{no}/question/all")
-    public ResponseEntity<List<QuestionResponseDto>> getAllQuestionsByUserNo(@PathVariable Long no) {
+    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions(@PathVariable Long no) {
         return new ResponseEntity<>(questionService.findAllByUserNo(no), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/question/top3")
-    public ResponseEntity<List<QuestionResponseDto>> getQuestionTop3ByUserNo(@PathVariable Long no) {
+    public ResponseEntity<List<QuestionResponseDto>> getQuestionTop3(@PathVariable Long no) {
         return new ResponseEntity<>(questionService.findTop3ByUserNo(no), HttpStatus.OK);
     }
 
 
     @GetMapping("/{no}/answer/all")
-    public ResponseEntity<List<AnswerResponseDto>> getAllAnswersByUserNo(@PathVariable Long no) {
+    public ResponseEntity<List<AnswerResponseDto>> getAllAnswers(@PathVariable Long no) {
         return new ResponseEntity<>(answerService.findAllByUserNo(no), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/answer/top3")
-    public ResponseEntity<List<AnswerResponseDto>> getAnswerTop3ByUserNo(@PathVariable Long no) {
+    public ResponseEntity<List<AnswerResponseDto>> getAnswerTop3(@PathVariable Long no) {
         return new ResponseEntity<>(answerService.findTop3ByUserNo(no), HttpStatus.OK);
     }
 }
