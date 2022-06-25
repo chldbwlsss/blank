@@ -41,12 +41,17 @@ public class UserApiV1Controller {
     }
 
     @PutMapping("/{no}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto) {
-        return new ResponseEntity<>(userService.update(no, requestDto), HttpStatus.ACCEPTED);
+    public ResponseEntity<UserResponseDto> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
+                                                  @SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser) {
+        if(no.equals(loginUser.getNo())) {
+            return new ResponseEntity<>(userService.update(no, requestDto), HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @DeleteMapping("/{no}/delete")
-    public ResponseEntity<Void> delete(@PathVariable Long no) {
+    public ResponseEntity<?> delete(@PathVariable Long no) {
         userService.delete(no);
         return new ResponseEntity<>(HttpStatus.OK);
     }
