@@ -29,7 +29,7 @@ public class UserService {
     public UserResponseDto update(Long no, UserUpdateRequestDto requestDto) {
         User user = userRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
-        user.updateUser(requestDto.getNickname(), requestDto.getProfileImgUrl());
+        user.updateUser(requestDto.getNickname());
 
         return new UserResponseDto(userRepository.findById(no).get());
     }

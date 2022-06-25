@@ -44,8 +44,8 @@ public class User extends BaseTimeEntity {
         return this.role.getKey();
     }
 
-    public void updateUser(String nickname, String profileImgUrl) {
+    public void updateUser(String nickname) {
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
+//        this.profileImgUrl = profileImgUrl;
     }
 }

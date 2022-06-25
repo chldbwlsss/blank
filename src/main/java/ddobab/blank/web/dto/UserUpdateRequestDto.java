@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 public class UserUpdateRequestDto {
 
     private String nickname;
-    private String profileImgUrl;
+//    private String profileImgUrl;
 
     @Builder
-    public UserUpdateRequestDto(String nickname, String profileImgUrl) {
+    public UserUpdateRequestDto(String nickname) {
         this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
     }
 }
