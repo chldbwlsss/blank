@@ -14,6 +14,7 @@ public class QuestionResponseDto {
     private String categoryValue;
     private String content;
     private String writer;
+    private Long writerNo;
     private Integer views;
 
     public QuestionResponseDto(Question question) {
@@ -21,6 +22,7 @@ public class QuestionResponseDto {
         this.categoryValue = question.getCategory().getKorValue();
         this.content = question.getContent();
         this.writer = question.getUser().getNickname();
+        this.writerNo = question.getUser().getNo();
         this.views = question.getViews();
     }
 }
