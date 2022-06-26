@@ -14,12 +14,11 @@ public class QuestionUpdateRequestDto {
 
     private String content;
     private String categoryValue;
-    private List<String> questionImgUrls;
+//    private List<String> questionImgUrls;
 
     @Builder
-    public QuestionUpdateRequestDto(String content, String categoryValue,  List<String> questionImgUrls) {
+    public QuestionUpdateRequestDto(String content, String categoryValue) {
         this.content = content;
         this.categoryValue = categoryValue;
-        this.questionImgUrls = questionImgUrls;
     }
 }

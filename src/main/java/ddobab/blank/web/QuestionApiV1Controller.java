@@ -24,7 +24,7 @@ public class QuestionApiV1Controller {
 
     @PostMapping
     public ResponseEntity<QuestionResponseDto> save(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
-//        requestDto.setUserNo(loginUser.getNo());
+        requestDto.setUserNo(loginUser.getNo());
 
         QuestionResponseDto savedQuestion = questionService.save(requestDto);
         log.info("savedQuestion = {}", savedQuestion);
@@ -39,12 +39,14 @@ public class QuestionApiV1Controller {
     @PutMapping("/{no}")
     public ResponseEntity<QuestionResponseDto> update(@PathVariable Long no, @RequestBody QuestionUpdateRequestDto requestDto) {
         return new ResponseEntity<>(questionService.update(no, requestDto), HttpStatus.ACCEPTED);
+        //수정 시 변경하려는 글의 작성자와 현재 로그인한 세션유저가 같은지 검증해야함
     }
 
     @DeleteMapping("/{no}")
     public ResponseEntity<Void> delete(@PathVariable Long no) {
         questionService.delete(no);
         return new ResponseEntity<>(HttpStatus.OK);
+        //삭제 시 지우려는 글의 작성자와 현재 로그인한 세션유저가 같은지 검증해야함
     }
 
     @GetMapping("/category")
