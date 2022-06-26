@@ -1,5 +1,7 @@
 package ddobab.blank.domain.question;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -16,7 +18,11 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findByContentContainingIgnoreCaseOrderByCreatedDateDesc(String word);
 
+    Slice<Question> findByContentContainingIgnoreCaseOrderByCreatedDateDesc(String word, Pageable pageable);
+
     List<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word);
+
+    Slice<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word, Pageable pageable);
 
     List<Question> findTop5ByCreatedDateGreaterThanOrderByViewsDesc(LocalDateTime twoDaysAgo);
 }
