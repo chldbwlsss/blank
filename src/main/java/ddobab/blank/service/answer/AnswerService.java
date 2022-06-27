@@ -25,9 +25,9 @@ public class AnswerService {
     private final AnswerImgRepository answerImgRepository;
 
     @Transactional
-    public AnswerResponseDto save(AnswerSaveRequestDto requestDto) {
+    public AnswerResponseDto save(Long userNo, AnswerSaveRequestDto requestDto) {
         Answer toSaveAnswer = Answer.builder()
-                                        .user(userRepository.findById(requestDto.getUserNo()).get())
+                                        .user(userRepository.findById(userNo).get())
                                         .question(questionRepository.findById(requestDto.getQuestionNo()).get())
                                         .content(requestDto.getContent())
                                         .build();

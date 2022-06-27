@@ -11,20 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionSaveRequestDto {
 
-    private Long userNo;
     private String content;
     private String categoryValue;
 //    private List<MultipartFile> questionImgFiles;
 
     @Builder
-    public QuestionSaveRequestDto(Long userNo, String content, String categoryValue) {
-        this.userNo = userNo;
+    public QuestionSaveRequestDto(String content, String categoryValue) {
         this.content = content;
         this.categoryValue = categoryValue;
     }
-
-    public void setUserNo(Long userNo){
-        this.userNo = userNo;
-    }
-
 }

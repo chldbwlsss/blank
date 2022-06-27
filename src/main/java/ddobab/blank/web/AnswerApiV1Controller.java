@@ -22,9 +22,8 @@ public class AnswerApiV1Controller {
 
     @PostMapping
     public ResponseEntity<AnswerResponseDto> save(@SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
-//        requestDto.setUserNo(loginUser.getUserNo());  !!!나중에 주석제거
 
-        AnswerResponseDto savedAnswer = answerService.save(requestDto);
+        AnswerResponseDto savedAnswer = answerService.save(loginUser.getNo(), requestDto);
         return new ResponseEntity<>(savedAnswer, HttpStatus.CREATED);
     }
 

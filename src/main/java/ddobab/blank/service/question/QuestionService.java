@@ -25,9 +25,9 @@ public class QuestionService {
     private final UserRepository userRepository;
 
     @Transactional
-    public QuestionResponseDto save(QuestionSaveRequestDto requestDto) {
+    public QuestionResponseDto save(Long userNo, QuestionSaveRequestDto requestDto) {
         Question toSaveQuestion = Question.builder()
-                                            .user(userRepository.findById(requestDto.getUserNo()).get())
+                                            .user(userRepository.findById(userNo).get())
                                             .content(requestDto.getContent())
                                             .category(QuestionCategory.valueOf(requestDto.getCategoryValue()))
                                             .views(0)
