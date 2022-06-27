@@ -73,16 +73,6 @@ public class QuestionService {
 
     }
 
-
-    public List<QuestionResponseDto> findAllByUserNo(Long no) {
-        List<Question> questionList = questionRepository.findByUserNo(no);
-        List<QuestionResponseDto> responseDtoList = questionList.stream()
-                                                            .map(question -> new QuestionResponseDto(question))
-                                            .collect(Collectors.toList());
-
-        return responseDtoList;
-    }
-
     public List<QuestionResponseDto> findTop3ByUserNo(Long no) {
         List<Question> questionTop3List = questionRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
         List<QuestionResponseDto> top3ResponseDtoList = questionTop3List.stream()

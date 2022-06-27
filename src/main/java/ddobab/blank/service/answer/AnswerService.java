@@ -48,15 +48,6 @@ public class AnswerService {
         return new AnswerSliceResponseDto(content,slice.hasNext());
     }
 
-    public List<AnswerResponseDto> findAllByUserNo(Long no) {
-        List<Answer> answerList = answerRepository.findByUserNo(no);
-        List<AnswerResponseDto> responseDtoList = answerList.stream()
-                                                    .map(answer -> new AnswerResponseDto(answer))
-                                        .collect(Collectors.toList());
-
-        return responseDtoList;
-    }
-
     public List<AnswerResponseDto> findTop3ByUserNo(Long no) {
         List<Answer> answerTop3List = answerRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
         List<AnswerResponseDto> top3ResponseDtoList = answerTop3List.stream()

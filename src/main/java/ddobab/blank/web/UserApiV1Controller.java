@@ -11,7 +11,6 @@ import ddobab.blank.web.dto.UserResponseDto;
 import ddobab.blank.web.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,20 +55,9 @@ public class UserApiV1Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{no}/question/all")
-    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions(@PathVariable Long no) {
-        return new ResponseEntity<>(questionService.findAllByUserNo(no), HttpStatus.OK);
-    }
-
     @GetMapping("/{no}/question/top3")
     public ResponseEntity<List<QuestionResponseDto>> getQuestionTop3(@PathVariable Long no) {
         return new ResponseEntity<>(questionService.findTop3ByUserNo(no), HttpStatus.OK);
-    }
-
-
-    @GetMapping("/{no}/answer/all")
-    public ResponseEntity<List<AnswerResponseDto>> getAllAnswers(@PathVariable Long no) {
-        return new ResponseEntity<>(answerService.findAllByUserNo(no), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/answer/top3")
