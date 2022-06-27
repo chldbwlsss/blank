@@ -8,8 +8,11 @@ import ddobab.blank.domain.question.QuestionRepository;
 import ddobab.blank.domain.user.UserRepository;
 import ddobab.blank.web.dto.AnswerResponseDto;
 import ddobab.blank.web.dto.AnswerSaveRequestDto;
+import ddobab.blank.web.dto.AnswerSliceResponseDto;
 import ddobab.blank.web.dto.AnswerUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +39,13 @@ public class AnswerService {
         return new AnswerResponseDto(answerRepository.findById(savedAnswer.getNo()).get());
     }
 
-    public List<AnswerResponseDto> findByQuestionNo(Long no) {
-        List<Answer> answerList = answerRepository.findByQuestionNo(no);
-        List<AnswerResponseDto> responseDtoList = answerList.stream()
-                                                    .map(answer -> new AnswerResponseDto(answer))
-                                          .collect(Collectors.toList());
+    public AnswerSliceResponseDto findAnswers(PageRequest pageRequest, Long no) {
+        Slice<Answer> slice = answerRepository.findByQuestionNoOrderByCreatedDateDesc(no, pageRequest);
+        //slice.hasContent()로 확인해서 내용이 없으면 exception 발생시키기
+        List<AnswerResponseDto> content = slice.getContent().stream()
+                .map(answer -> new AnswerResponseDto(answer)).collect(Collectors.toList());
 
-        return responseDtoList;
+        return new AnswerSliceResponseDto(content,slice.hasNext());
     }
 
     public List<AnswerResponseDto> findAllByUserNo(Long no) {

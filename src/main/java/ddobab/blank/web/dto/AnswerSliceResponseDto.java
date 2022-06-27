@@ -9,9 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class QuestionSliceResponseDto {
+public class AnswerSliceResponseDto {
 
-    List<QuestionResponseDto> questionResponseDto;
+    List<AnswerResponseDto> answerResponseDtoList;
     private boolean hasNext;
-
 }

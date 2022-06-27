@@ -16,11 +16,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     void deleteByUserNo(Long no);
 
-    List<Question> findByContentContainingIgnoreCaseOrderByCreatedDateDesc(String word);
-
     Slice<Question> findByContentContainingIgnoreCaseOrderByCreatedDateDesc(String word, Pageable pageable);
-
-    List<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word);
 
     Slice<Question> findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory category, String word, Pageable pageable);
 

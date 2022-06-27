@@ -22,23 +22,7 @@ public class SearchService {
 
     private final QuestionRepository questionRepository;
 
-    public List<QuestionResponseDto> getSearchedQuestion(String categoryValue, String word) {
-        List<Question> searchedList;
-
-        if ("NONE".equals(categoryValue)) {
-            searchedList  = questionRepository.findByContentContainingIgnoreCaseOrderByCreatedDateDesc(word);
-
-        } else {
-            searchedList = questionRepository.findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory.valueOf(categoryValue), word);
-        }
-        List<QuestionResponseDto> responseDtoList = searchedList.stream()
-                                                        .map(question -> new QuestionResponseDto(question))
-                                                    .collect(Collectors.toList());
-        log.info("responseDtoList = {}", responseDtoList);
-        return responseDtoList;
-    }
-
-    public QuestionSliceResponseDto getSearchedQuestionSlice(PageRequest pageRequest, String categoryValue, String word) {
+    public QuestionSliceResponseDto findSearchedQuestions(PageRequest pageRequest, String categoryValue, String word) {
         Slice<Question> slice;
 
         if ("NONE".equals(categoryValue)) {
@@ -47,11 +31,11 @@ public class SearchService {
         } else {
             slice = questionRepository.findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory.valueOf(categoryValue), word, pageRequest);
         }
+        //slice.hasContent()로 확인해서 내용이 없으면 exception 발생시키기
         List<QuestionResponseDto> content = slice.getContent().stream()
                                                      .map(question -> new QuestionResponseDto(question))
                                             .collect(Collectors.toList());
 
-        //slice.hasContent()로 확인해서 내용이 없으면 exception 발생시키기
         return new QuestionSliceResponseDto(content, slice.hasNext());
     }
 }
