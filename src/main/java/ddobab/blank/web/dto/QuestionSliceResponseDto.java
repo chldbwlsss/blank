@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 public class QuestionSliceResponseDto {
 
-    List<QuestionResponseDto> questionResponseDto;
+    List<QuestionResponseDto> questions;
     private boolean hasNext;
 
 }
