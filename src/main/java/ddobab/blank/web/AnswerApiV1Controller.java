@@ -2,11 +2,9 @@ package ddobab.blank.web;
 
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
-import ddobab.blank.web.dto.AnswerResponseDto;
-import ddobab.blank.web.dto.AnswerSaveRequestDto;
-import ddobab.blank.web.dto.AnswerUpdateRequestDto;
-import ddobab.blank.web.dto.QuestionResponseDto;
+import ddobab.blank.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +25,11 @@ public class AnswerApiV1Controller {
         return new ResponseEntity<>(savedAnswer, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{no}")  //질문번호로 답변리스트 가져옴
-    public ResponseEntity<List<AnswerResponseDto>> findByQuestionNo(@PathVariable Long no) {
-        return new ResponseEntity<>(answerService.findByQuestionNo(no), HttpStatus.OK);
+    @GetMapping  //질문번호로 답변리스트 가져옴
+    public ResponseEntity<AnswerSliceResponseDto> findAnswers(@RequestParam("questionNo") Long questionNo,@RequestParam("page") String page, @RequestParam("size") String size){
+        PageRequest pageRequest = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
+
+        return new ResponseEntity<>(answerService.findAnswers(pageRequest, questionNo), HttpStatus.OK);
     }
 
     @PutMapping("/{no}")
