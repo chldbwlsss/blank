@@ -1,5 +1,6 @@
 package ddobab.blank.web;
 
+import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
 import ddobab.blank.web.dto.*;
@@ -19,7 +20,7 @@ public class AnswerApiV1Controller {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity<AnswerResponseDto> save(@SessionAttribute(name="loginUser", required = false) SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
+    public ResponseEntity<AnswerResponseDto> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
 
         AnswerResponseDto savedAnswer = answerService.save(loginUser.getNo(), requestDto);
         return new ResponseEntity<>(savedAnswer, HttpStatus.CREATED);
@@ -33,13 +34,22 @@ public class AnswerApiV1Controller {
     }
 
     @PutMapping("/{no}")
-    public ResponseEntity<AnswerResponseDto> update(@PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
-        return new ResponseEntity<>(answerService.update(no, requestDto), HttpStatus.ACCEPTED);
+    public ResponseEntity<AnswerResponseDto> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
+        if(no.equals(loginUser.getNo())) {
+            return new ResponseEntity<>(answerService.update(no, requestDto), HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //예외처리, 메세지
+        }
+
     }
 
     @DeleteMapping("/{no}")
-    public ResponseEntity<Void> delete(@PathVariable Long no) {
-        answerService.delete(no);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+        if (no.equals(loginUser.getNo())) {
+            answerService.delete(no);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //예외처리, 메세지
+        }
     }
 }

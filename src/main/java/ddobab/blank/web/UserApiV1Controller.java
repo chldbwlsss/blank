@@ -1,6 +1,7 @@
 package ddobab.blank.web;
 
 
+import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
 import ddobab.blank.service.question.QuestionService;
@@ -28,7 +29,7 @@ public class UserApiV1Controller {
     private final AnswerService answerService;
 
     @GetMapping
-    public ResponseEntity<SessionUserDto> getSessionUser(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser) {
+    public ResponseEntity<SessionUserDto> getSessionUser(@LoginUser SessionUserDto loginUser) {
         log.info("[GET] LOGIN-USER : {}", loginUser);
 
         return new ResponseEntity<>(loginUser, loginUser != null ? HttpStatus.OK : HttpStatus.NO_CONTENT);
@@ -41,7 +42,7 @@ public class UserApiV1Controller {
 
     @PutMapping("/{no}")
     public ResponseEntity<UserResponseDto> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
-                                                  @SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser) {
+                                                  @LoginUser SessionUserDto loginUser) {
         if(no.equals(loginUser.getNo())) {
             return new ResponseEntity<>(userService.update(no, requestDto), HttpStatus.ACCEPTED);
         } else {
@@ -50,9 +51,13 @@ public class UserApiV1Controller {
     }
 
     @DeleteMapping("/{no}/delete")
-    public ResponseEntity<?> delete(@PathVariable Long no) {
-        userService.delete(no);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+        if(no.equals(loginUser.getNo())) {
+            userService.delete(no);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/{no}/question/top3")

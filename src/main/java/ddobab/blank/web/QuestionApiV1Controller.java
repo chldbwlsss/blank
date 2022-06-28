@@ -1,6 +1,7 @@
 package ddobab.blank.web;
 
 import ddobab.blank.domain.question.QuestionCategory;
+import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.question.QuestionService;
 import ddobab.blank.web.dto.QuestionResponseDto;
@@ -23,7 +24,7 @@ public class QuestionApiV1Controller {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<QuestionResponseDto> save(@SessionAttribute(name = "loginUser", required = false) SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
+    public ResponseEntity<QuestionResponseDto> save(@LoginUser SessionUserDto loginUser, @RequestBody QuestionSaveRequestDto requestDto) {
 
         QuestionResponseDto savedQuestion = questionService.save(loginUser.getNo(), requestDto);
         log.info("savedQuestion = {}", savedQuestion);
@@ -36,16 +37,22 @@ public class QuestionApiV1Controller {
     }
 
     @PutMapping("/{no}")
-    public ResponseEntity<QuestionResponseDto> update(@PathVariable Long no, @RequestBody QuestionUpdateRequestDto requestDto) {
-        return new ResponseEntity<>(questionService.update(no, requestDto), HttpStatus.ACCEPTED);
-        //수정 시 변경하려는 글의 작성자와 현재 로그인한 세션유저가 같은지 검증해야함
+    public ResponseEntity<QuestionResponseDto> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody QuestionUpdateRequestDto requestDto) {
+        if(no.equals(loginUser.getNo())) {
+            return new ResponseEntity<>(questionService.update(no, requestDto), HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//예외처리, 메세지 넘기기
+        }
     }
 
     @DeleteMapping("/{no}")
-    public ResponseEntity<Void> delete(@PathVariable Long no) {
-        questionService.delete(no);
-        return new ResponseEntity<>(HttpStatus.OK);
-        //삭제 시 지우려는 글의 작성자와 현재 로그인한 세션유저가 같은지 검증해야함
+    public ResponseEntity<Void> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+        if (no.equals(loginUser.getNo())) {
+            questionService.delete(no);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);   //예외처리 메세지
+        }
     }
 
     @GetMapping("/category")
