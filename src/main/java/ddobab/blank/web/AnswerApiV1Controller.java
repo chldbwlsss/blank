@@ -20,23 +20,26 @@ public class AnswerApiV1Controller {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity<AnswerResponseDto> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
-
-        AnswerResponseDto savedAnswer = answerService.save(loginUser.getNo(), requestDto);
-        return new ResponseEntity<>(savedAnswer, HttpStatus.CREATED);
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
+        //bean validation 필요
+        AnswerResponseDto data = answerService.save(loginUser.getNo(), requestDto);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
     }
 
     @GetMapping  //질문번호로 답변리스트 가져옴
-    public ResponseEntity<AnswerSliceResponseDto> findAnswers(@RequestParam("questionNo") Long questionNo,@RequestParam("page") String page, @RequestParam("size") String size){
+    public ResponseEntity<ResponseDto<AnswerSliceResponseDto>> getAnswers(@RequestParam("questionNo") Long questionNo,@RequestParam("page") String page, @RequestParam("size") String size){
+       //잘못된 파라미터 요청(bad request), 잘못된 타입 요청
         PageRequest pageRequest = PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
-
-        return new ResponseEntity<>(answerService.findAnswers(pageRequest, questionNo), HttpStatus.OK);
+        AnswerSliceResponseDto data = answerService.findAnswers(pageRequest, questionNo);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
     @PutMapping("/{no}")
-    public ResponseEntity<AnswerResponseDto> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
+       //bean validation
         if(no.equals(loginUser.getNo())) {
-            return new ResponseEntity<>(answerService.update(no, requestDto), HttpStatus.ACCEPTED);
+            AnswerResponseDto data = answerService.update(no, requestDto);
+            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //예외처리, 메세지
         }
@@ -44,10 +47,10 @@ public class AnswerApiV1Controller {
     }
 
     @DeleteMapping("/{no}")
-    public ResponseEntity<Void> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+    public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         if (no.equals(loginUser.getNo())) {
             answerService.delete(no);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //예외처리, 메세지
         }

@@ -34,7 +34,7 @@ public class QuestionApiV1Controller {
     }
 
     @GetMapping("/{no}")
-    public ResponseEntity<ResponseDto<QuestionResponseDto>> findByNo(@PathVariable Long no) {
+    public ResponseEntity<ResponseDto<QuestionResponseDto>> getQuestion(@PathVariable Long no) {
         //pathvariable type mismatch? ex
         QuestionResponseDto data = questionService.findByNo(no);
 
@@ -73,7 +73,7 @@ public class QuestionApiV1Controller {
     }
 
     @GetMapping("/top5")
-    public ResponseEntity<ResponseDto<List<QuestionResponseDto>>> getQuestionTop5() {
+    public ResponseEntity<ResponseDto<List<QuestionResponseDto>>> getQuestionsTop5() {
         List<QuestionResponseDto> data = questionService.getTop5ByViews();
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
