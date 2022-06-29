@@ -26,10 +26,11 @@ public class UserApiV1Controller {
     private final AnswerService answerService;
 
     @GetMapping
-    public ResponseEntity<SessionUserDto> getSessionUser(@LoginUser SessionUserDto loginUser) {
+    public ResponseEntity<ResponseDto<SessionUserDto>> getSessionUser(@LoginUser SessionUserDto loginUser) {
+
         log.info("[GET] LOGIN-USER : {}", loginUser);
 
-        return new ResponseEntity<>(loginUser, loginUser != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), loginUser != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/{no}")

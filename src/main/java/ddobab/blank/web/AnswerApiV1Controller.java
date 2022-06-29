@@ -37,7 +37,8 @@ public class AnswerApiV1Controller {
     @PutMapping("/{no}")
     public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
        //bean validation
-        if(no.equals(loginUser.getNo())) {
+        Long writerNo = answerService.getAnswerWriter(no);
+        if(writerNo.equals(loginUser.getNo())) {
             AnswerResponseDto data = answerService.update(no, requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
         } else {
@@ -48,7 +49,8 @@ public class AnswerApiV1Controller {
 
     @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
-        if (no.equals(loginUser.getNo())) {
+        Long writerNo = answerService.getAnswerWriter(no);
+        if (writerNo.equals(loginUser.getNo())) {
             answerService.delete(no);
             return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
         } else {

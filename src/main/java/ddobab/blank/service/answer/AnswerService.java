@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -75,5 +76,10 @@ public class AnswerService {
     public void delete(Long no) {
         answerRepository.delete(answerRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다.")));
+    }
+
+    public Long getAnswerWriter(Long no){
+        Answer answer = answerRepository.findById(no).orElseThrow(()->new IllegalArgumentException("존재하지 않는 답변입니다."));
+        return answer.getUser().getNo();
     }
 }
