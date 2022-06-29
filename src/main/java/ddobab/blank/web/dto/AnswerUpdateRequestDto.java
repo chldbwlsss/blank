@@ -11,11 +11,10 @@ import java.util.List;
 public class AnswerUpdateRequestDto {
 
     private String content;
-    private List<String> answerImgUrls;
+//    private List<String> answerImgUrls;
 
     @Builder
-    public AnswerUpdateRequestDto(String content, List<String> answerImgUrls) {
+    public AnswerUpdateRequestDto(String content) {
         this.content = content;
-        this.answerImgUrls = answerImgUrls;
     }
 }
