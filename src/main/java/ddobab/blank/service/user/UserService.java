@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -20,7 +22,7 @@ public class UserService {
 
     public UserResponseDto findByNo(Long no) {
         User user = userRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
 
         return new UserResponseDto(user);
     }
@@ -28,17 +30,17 @@ public class UserService {
     @Transactional
     public UserResponseDto update(Long no, UserUpdateRequestDto requestDto) {
         User user = userRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
         user.updateUser(requestDto.getNickname());
 
-        return new UserResponseDto(userRepository.findById(no).get());
+        return new UserResponseDto(user);
     }
 
     @Transactional
     public void delete(Long no) {
-        answerRepository.deleteByUserNo(no);
+        answerRepository.deleteByUserNo(no); //cascade관련 수정필요
         questionRepository.deleteByUserNo(no);
         userRepository.delete(userRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.")));
+                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no)));
     }
 }

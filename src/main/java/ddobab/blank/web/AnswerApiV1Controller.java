@@ -1,5 +1,6 @@
 package ddobab.blank.web;
 
+import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
@@ -22,8 +23,12 @@ public class AnswerApiV1Controller {
     @PostMapping
     public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
         //bean validation 필요
-        AnswerResponseDto data = answerService.save(loginUser.getNo(), requestDto);
-        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
+        if(loginUser!=null){
+            AnswerResponseDto data = answerService.save(loginUser.getNo(), requestDto);
+            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
+        }else{
+            throw new UnauthorizedException("데이터 생성 권한이 없습니다.");
+        }
     }
 
     @GetMapping  //질문번호로 답변리스트 가져옴
@@ -37,24 +42,35 @@ public class AnswerApiV1Controller {
     @PutMapping("/{no}")
     public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
        //bean validation
-        Long writerNo = answerService.getAnswerWriter(no);
-        if(writerNo.equals(loginUser.getNo())) {
-            AnswerResponseDto data = answerService.update(no, requestDto);
-            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //예외처리, 메세지
+        if(loginUser!=null) {
+            Long writerNo = answerService.getAnswerWriter(no);
+            if (writerNo.equals(loginUser.getNo())) {
+                AnswerResponseDto data = answerService.update(no, requestDto);
+                return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
+            } else {
+                throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
+            }
+        }else{
+            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
         }
+
 
     }
 
     @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
-        Long writerNo = answerService.getAnswerWriter(no);
-        if (writerNo.equals(loginUser.getNo())) {
-            answerService.delete(no);
-            return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //예외처리, 메세지
+
+        if(loginUser!=null){
+            Long writerNo = answerService.getAnswerWriter(no);
+            if (writerNo.equals(loginUser.getNo())) {
+                answerService.delete(no);
+                return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
+            } else {
+                throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
+            }
+        }else{
+            throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
         }
+
     }
 }

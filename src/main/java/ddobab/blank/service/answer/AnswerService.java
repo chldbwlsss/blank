@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,36 +32,33 @@ public class AnswerService {
     @Transactional
     public AnswerResponseDto save(Long userNo, AnswerSaveRequestDto requestDto) {
         Answer toSaveAnswer = Answer.builder()
-                                        .user(userRepository.findById(userNo).get())
-                                        .question(questionRepository.findById(requestDto.getQuestionNo()).get())
+                                        .user(userRepository.findById(userNo).orElseThrow(()->new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+userNo)))
+                                        .question(questionRepository.findById(requestDto.getQuestionNo()).orElseThrow(()->new NoSuchElementException("해당 질문을 찾을 수 없습니다. QUESTION-NO:"+requestDto.getQuestionNo())))
                                         .content(requestDto.getContent())
                                         .build();
         Answer savedAnswer = answerRepository.save(toSaveAnswer);
         //답변사진 저장해야됨!!!
-        return new AnswerResponseDto(answerRepository.findById(savedAnswer.getNo()).get());
+        return new AnswerResponseDto(answerRepository.findById(savedAnswer.getNo()).orElseThrow(()->new IllegalStateException("답변 저장이 완료되지 않았습니다.")));
     }
 
     public AnswerSliceResponseDto findAnswers(PageRequest pageRequest, Long no) {
         Slice<Answer> slice = answerRepository.findByQuestionNoOrderByCreatedDateDesc(no, pageRequest);
-        //slice.hasContent()로 확인해서 내용이 없으면 exception 발생시키기
         List<AnswerResponseDto> content = slice.getContent().stream()
-                .map(answer -> new AnswerResponseDto(answer)).collect(Collectors.toList());
-
+                                                            .map(AnswerResponseDto::new).collect(Collectors.toList());
         return new AnswerSliceResponseDto(content,slice.hasNext());
     }
 
     public List<AnswerResponseDto> findTop3ByUserNo(Long no) {
         List<Answer> answerTop3List = answerRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
-        List<AnswerResponseDto> top3ResponseDtoList = answerTop3List.stream()
-                                                         .map(answer -> new AnswerResponseDto(answer))
-                                            .collect(Collectors.toList());
-        return top3ResponseDtoList;
+        return answerTop3List.stream()
+                              .map(AnswerResponseDto::new)
+                              .collect(Collectors.toList());
     }
 
     @Transactional
     public AnswerResponseDto update(Long no, AnswerUpdateRequestDto requestDto) {
         Answer answer = answerRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO"+no));
         answer.updateAnswer(requestDto.getContent());
 
 //        answerImgRepository.deleteByAnswerNo(no);
@@ -70,16 +68,16 @@ public class AnswerService {
 //                        .answer(answer)
 //                        .answerImgUrl(imgUrl)
 //                        .build()));     !!!나중에 주석 제거
-        return new AnswerResponseDto(answerRepository.findById(no).get());
+        return new AnswerResponseDto(answerRepository.findById(no).orElseThrow(()->new IllegalStateException("답변 변경이 완료되지 않았습니다.")));
     }
 
     public void delete(Long no) {
         answerRepository.delete(answerRepository.findById(no)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다.")));
+                .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO:"+no)));
     }
 
     public Long getAnswerWriter(Long no){
-        Answer answer = answerRepository.findById(no).orElseThrow(()->new IllegalArgumentException("존재하지 않는 답변입니다."));
+        Answer answer = answerRepository.findById(no).orElseThrow(()->new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO:"+no));
         return answer.getUser().getNo();
     }
 }

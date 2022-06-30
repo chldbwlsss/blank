@@ -1,6 +1,7 @@
 package ddobab.blank.web;
 
 
+import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
@@ -27,15 +28,17 @@ public class UserApiV1Controller {
 
     @GetMapping
     public ResponseEntity<ResponseDto<SessionUserDto>> getSessionUser(@LoginUser SessionUserDto loginUser) {
+        if(loginUser!=null){
+            log.info("[GET] LOGIN-USER : {}", loginUser);
+            return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), HttpStatus.OK);
+        }else{
+            throw new UnauthorizedException("데이터 접근 권한이 없습니다.");
+        }
 
-        log.info("[GET] LOGIN-USER : {}", loginUser);
-
-        return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), loginUser != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/{no}")
     public ResponseEntity<ResponseDto<UserResponseDto>> getUserProfile(@PathVariable Long no) {
-        //잘못된 타입으로 요청
         UserResponseDto data = userService.findByNo(no);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
@@ -48,7 +51,7 @@ public class UserApiV1Controller {
             UserResponseDto data = userService.update(no, requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
         }
     }
 
@@ -59,20 +62,18 @@ public class UserApiV1Controller {
             userService.delete(no);
             return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
         }
     }
 
     @GetMapping("/{no}/question/top3")
     public ResponseEntity<ResponseDto<List<QuestionResponseDto>>> getQuestionsTop3(@PathVariable Long no) {
-        //잘못된 타입으로 요청
         List<QuestionResponseDto> data = questionService.findTop3ByUserNo(no);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/answer/top3")
     public ResponseEntity<ResponseDto<List<AnswerResponseDto>>> getAnswersTop3(@PathVariable Long no) {
-        //잘못된 타입으로 요청
         List<AnswerResponseDto> data = answerService.findTop3ByUserNo(no);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }

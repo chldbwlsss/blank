@@ -27,15 +27,12 @@ public class SearchService {
 
         if ("NONE".equals(categoryValue)) {
             slice = questionRepository.findByContentContainingIgnoreCaseOrderByCreatedDateDesc(word, pageRequest);
-
         } else {
             slice = questionRepository.findByCategoryAndContentContainingIgnoreCaseOrderByCreatedDateDesc(QuestionCategory.valueOf(categoryValue), word, pageRequest);
         }
-        //slice.hasContent()로 확인해서 내용이 없으면 exception 발생시키기
         List<QuestionResponseDto> content = slice.getContent().stream()
-                                                     .map(question -> new QuestionResponseDto(question))
-                                            .collect(Collectors.toList());
-
+                                                                .map(QuestionResponseDto::new)
+                                                                .collect(Collectors.toList());
         return new QuestionSliceResponseDto(content, slice.hasNext());
     }
 }

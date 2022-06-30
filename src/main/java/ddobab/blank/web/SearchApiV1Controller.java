@@ -23,5 +23,6 @@ public class SearchApiV1Controller {
         PageRequest pageRequest = PageRequest.of(Integer.parseInt(page),Integer.parseInt(size));
         QuestionSliceResponseDto data = searchService.findSearchedQuestions(pageRequest, categoryValue, word);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
+
     }
 }
