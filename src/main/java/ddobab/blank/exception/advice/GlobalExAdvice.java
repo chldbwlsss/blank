@@ -1,5 +1,6 @@
 package ddobab.blank.exception.advice;
 
+import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.exception.dto.ErrorDto;
 import ddobab.blank.web.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,8 @@ public class GlobalExAdvice {
         return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
-    public ResponseEntity<ResponseDto<?>> unauthorized(HttpClientErrorException.Unauthorized e) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ResponseDto<?>> unauthorized(UnauthorizedException e) {
         ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
 
         return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.UNAUTHORIZED);
