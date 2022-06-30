@@ -90,4 +90,10 @@ public class QuestionService {
                                              .collect(Collectors.toList());
         return top5ResponseDtoList;
     }
+
+    public Long getQuestionWrtier(Long no) {
+        Question question = questionRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다."));
+        return question.getUser().getNo();
+    }
 }

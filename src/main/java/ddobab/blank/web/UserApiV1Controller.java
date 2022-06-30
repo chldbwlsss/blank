@@ -6,10 +6,7 @@ import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
 import ddobab.blank.service.question.QuestionService;
 import ddobab.blank.service.user.UserService;
-import ddobab.blank.web.dto.AnswerResponseDto;
-import ddobab.blank.web.dto.QuestionResponseDto;
-import ddobab.blank.web.dto.UserResponseDto;
-import ddobab.blank.web.dto.UserUpdateRequestDto;
+import ddobab.blank.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,44 +26,54 @@ public class UserApiV1Controller {
     private final AnswerService answerService;
 
     @GetMapping
-    public ResponseEntity<SessionUserDto> getSessionUser(@LoginUser SessionUserDto loginUser) {
+    public ResponseEntity<ResponseDto<SessionUserDto>> getSessionUser(@LoginUser SessionUserDto loginUser) {
+
         log.info("[GET] LOGIN-USER : {}", loginUser);
 
-        return new ResponseEntity<>(loginUser, loginUser != null ? HttpStatus.OK : HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), loginUser != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/{no}")
-    public ResponseEntity<UserResponseDto> getUserProfile(@PathVariable Long no) {
-        return new ResponseEntity<>(userService.findByNo(no), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<UserResponseDto>> getUserProfile(@PathVariable Long no) {
+        //잘못된 타입으로 요청
+        UserResponseDto data = userService.findByNo(no);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
     @PutMapping("/{no}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
+    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
                                                   @LoginUser SessionUserDto loginUser) {
+        //bean validation 점검
         if(no.equals(loginUser.getNo())) {
-            return new ResponseEntity<>(userService.update(no, requestDto), HttpStatus.ACCEPTED);
+            UserResponseDto data = userService.update(no, requestDto);
+            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @DeleteMapping("/{no}/delete")
-    public ResponseEntity<?> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+    public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
+        //잘못된 타입으로 요청
         if(no.equals(loginUser.getNo())) {
             userService.delete(no);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{no}/question/top3")
-    public ResponseEntity<List<QuestionResponseDto>> getQuestionTop3(@PathVariable Long no) {
-        return new ResponseEntity<>(questionService.findTop3ByUserNo(no), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<List<QuestionResponseDto>>> getQuestionsTop3(@PathVariable Long no) {
+        //잘못된 타입으로 요청
+        List<QuestionResponseDto> data = questionService.findTop3ByUserNo(no);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/answer/top3")
-    public ResponseEntity<List<AnswerResponseDto>> getAnswerTop3(@PathVariable Long no) {
-        return new ResponseEntity<>(answerService.findTop3ByUserNo(no), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<List<AnswerResponseDto>>> getAnswersTop3(@PathVariable Long no) {
+        //잘못된 타입으로 요청
+        List<AnswerResponseDto> data = answerService.findTop3ByUserNo(no);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 }
