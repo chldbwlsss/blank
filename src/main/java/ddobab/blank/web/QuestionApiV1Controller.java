@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -44,8 +43,8 @@ public class QuestionApiV1Controller {
     @PutMapping("/{no}")
     public ResponseEntity<ResponseDto<QuestionResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody QuestionUpdateRequestDto requestDto) {
         //bean valid
-
-        if(no.equals(loginUser.getNo())) {
+        Long writerNo = questionService.getQuestionWrtier(no);
+        if(writerNo.equals(loginUser.getNo())) {
             QuestionResponseDto data = questionService.update(no, requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
         } else {
@@ -56,8 +55,8 @@ public class QuestionApiV1Controller {
     @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //path var ex
-
-        if (no.equals(loginUser.getNo())) {
+        Long writerNo = questionService.getQuestionWrtier(no);
+        if (writerNo.equals(loginUser.getNo())) {
             questionService.delete(no);
             return new ResponseEntity<>(new ResponseDto<>(null, null),HttpStatus.OK);
         } else {
