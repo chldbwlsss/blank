@@ -1,0 +1,54 @@
+package ddobab.blank.exception.advice;
+
+import ddobab.blank.exception.customException.UnauthorizedException;
+import ddobab.blank.exception.dto.ErrorDto;
+import ddobab.blank.web.dto.ResponseDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.NoSuchElementException;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExAdvice {
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ResponseDto<?>> allOtherException(RuntimeException e) {
+        ErrorDto error = new ErrorDto("SERVER", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ResponseDto<?>> unauthorized(UnauthorizedException e) {
+        ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDto<?>> badRequest(IllegalArgumentException e) {
+        ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ResponseDto<?>> notFound(NoSuchElementException e) {
+        ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ResponseDto<?>> server(IllegalStateException e) {
+        ErrorDto error = new ErrorDto("SERVER", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
