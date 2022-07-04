@@ -4,6 +4,7 @@ import ddobab.blank.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,7 +29,10 @@ public class SecurityConfig{
                 .and()
                     .authorizeHttpRequests()
                     .antMatchers("/h2-console/**").permitAll()
-                    .antMatchers("/api/v1/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/search/question").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/question/**").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/v1/user/**").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/v1/answer").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .logout()

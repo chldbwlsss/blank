@@ -1,4 +1,4 @@
-package ddobab.blank.web;
+package ddobab.blank.web.controller;
 
 import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;

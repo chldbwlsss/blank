@@ -1,4 +1,4 @@
-package ddobab.blank.web;
+package ddobab.blank.web.controller;
 
 import ddobab.blank.service.search.SearchService;
 import ddobab.blank.web.dto.QuestionSliceResponseDto;

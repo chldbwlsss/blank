@@ -1,4 +1,4 @@
-package ddobab.blank.web;
+package ddobab.blank.web.controller;
 
 import ddobab.blank.domain.question.QuestionCategory;
 import ddobab.blank.exception.customException.UnauthorizedException;
