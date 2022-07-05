@@ -5,7 +5,7 @@ import ddobab.blank.domain.question.QuestionRepository;
 import ddobab.blank.domain.user.User;
 import ddobab.blank.domain.user.UserRepository;
 import ddobab.blank.web.dto.UserResponseDto;
-import ddobab.blank.web.dto.UserUpdateRequestDto;
+import ddobab.blank.web.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto update(Long no, UserUpdateRequestDto requestDto) {
+    public UserResponseDto update(Long no, UserRequestDto requestDto) {
             User user = userRepository.findById(no)
                     .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
             user.updateUser(requestDto.getNickname());

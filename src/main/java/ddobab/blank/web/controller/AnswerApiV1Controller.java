@@ -9,9 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/answer")
@@ -21,14 +20,10 @@ public class AnswerApiV1Controller {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerSaveRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerRequestDto requestDto) {
         //bean validation 필요
-        if(loginUser!=null){
             AnswerResponseDto data = answerService.save(loginUser.getNo(), requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
-        }else{
-            throw new UnauthorizedException("데이터 생성 권한이 없습니다.");
-        }
     }
 
     @GetMapping  //질문번호로 답변리스트 가져옴
@@ -39,38 +34,19 @@ public class AnswerApiV1Controller {
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
+    @PreAuthorize("@webSecurity.checkAnswerAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerUpdateRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerRequestDto requestDto) {
        //bean validation
-        if(loginUser!=null) {
-            Long writerNo = answerService.getAnswerWriter(no);
-            if (writerNo.equals(loginUser.getNo())) {
-                AnswerResponseDto data = answerService.update(no, requestDto);
-                return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
-            } else {
-                throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
-            }
-        }else{
-            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
-        }
-
-
+        AnswerResponseDto data = answerService.update(no, requestDto);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("@webSecurity.checkAnswerAuthority(#no, #loginUser)")
     @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
 
-        if(loginUser!=null){
-            Long writerNo = answerService.getAnswerWriter(no);
-            if (writerNo.equals(loginUser.getNo())) {
-                answerService.delete(no);
-                return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
-            } else {
-                throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
-            }
-        }else{
-            throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
-        }
-
+        answerService.delete(no);
+        return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
     }
 }

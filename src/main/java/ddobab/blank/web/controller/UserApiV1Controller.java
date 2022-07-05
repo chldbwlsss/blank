@@ -44,28 +44,21 @@ public class UserApiV1Controller {
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
-    @PreAuthorize("@webSecurity.checkAuthority(#no, #loginUser)")
+    @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
+    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserRequestDto requestDto,
                                                   @LoginUser SessionUserDto loginUser) {
         //bean validation 점검
-//        if(no.equals(loginUser.getNo())) {
-            UserResponseDto data = userService.update(no, requestDto);
-            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
-//        } else {
-//            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
-//        }
+        UserResponseDto data = userService.update(no, requestDto);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
     @DeleteMapping("/{no}/delete")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //잘못된 타입으로 요청
-        if(no.equals(loginUser.getNo())) {
-            userService.delete(no);
-            return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
-        } else {
-            throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
-        }
+        userService.delete(no);
+        return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/question/top3")

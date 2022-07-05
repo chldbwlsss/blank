@@ -3,9 +3,8 @@ package ddobab.blank.service.question;
 import ddobab.blank.domain.answer.AnswerRepository;
 import ddobab.blank.domain.question.*;
 import ddobab.blank.domain.user.UserRepository;
+import ddobab.blank.web.dto.QuestionRequestDto;
 import ddobab.blank.web.dto.QuestionResponseDto;
-import ddobab.blank.web.dto.QuestionSaveRequestDto;
-import ddobab.blank.web.dto.QuestionUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class QuestionService {
     private final UserRepository userRepository;
 
     @Transactional
-    public QuestionResponseDto save(Long userNo, QuestionSaveRequestDto requestDto) {
+    public QuestionResponseDto save(Long userNo, QuestionRequestDto requestDto) {
         Question toSaveQuestion = Question.builder()
                                             .user(userRepository.findById(userNo).orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+userNo)))
                                             .content(requestDto.getContent())
@@ -50,7 +49,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionResponseDto update(Long no, QuestionUpdateRequestDto requestDto) {
+    public QuestionResponseDto update(Long no, QuestionRequestDto requestDto) {
         Question question = questionRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 질문을 찾을 수 없습니다. QUESTION-NO:"+no));
         question.updateQuestion(requestDto.getContent(), QuestionCategory.valueOf(requestDto.getCategoryValue()));
@@ -62,7 +61,6 @@ public class QuestionService {
 //                        .question(question)
 //                        .questionImgUrl(imgUrl)
 //                        .build()));     !!!나중에 주석 제거
-
         return new QuestionResponseDto(questionRepository.findById(no).orElseThrow(()->new IllegalStateException("질문 변경이 완료되지 않았습니다. QUESTION-NO"+no)));
     }
 

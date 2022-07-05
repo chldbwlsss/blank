@@ -14,7 +14,7 @@ import ddobab.blank.service.answer.AnswerService;
 import ddobab.blank.service.question.QuestionService;
 import ddobab.blank.service.user.UserService;
 import ddobab.blank.web.dto.UserResponseDto;
-import ddobab.blank.web.dto.UserUpdateRequestDto;
+import ddobab.blank.web.dto.UserRequestDto;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,14 +77,14 @@ class UserApiV1ControllerTest {
     void 유저_프로필_수정() throws Exception {
 
 
-        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
+        UserRequestDto userUpdateRequestDto = UserRequestDto.builder()
                                                                         .nickname("변경된테스트유저")
                                                                         .build();
         Gson gson = new Gson();
         String requestBody = gson.toJson(userUpdateRequestDto);
         UserResponseDto userResponseDto = new UserResponseDto(1L, "변경된테스트유저", "test-email@gmail.com", "test_img_url");
 
-        given(userService.update(eq(1L), any(UserUpdateRequestDto.class)))
+        given(userService.update(eq(1L), any(UserRequestDto.class)))
                 .willReturn(userResponseDto);
 
         mockMvc.perform(put("/api/v1/user/1").contentType(MediaType.APPLICATION_JSON).content(requestBody).with(csrf()))
@@ -99,7 +99,7 @@ class UserApiV1ControllerTest {
                         jsonPath("$.error").isEmpty()
                 ).andDo(print());
 
-        verify(userService).update(eq(1L), any(UserUpdateRequestDto.class));
+        verify(userService).update(eq(1L), any(UserRequestDto.class));
     }
 
 

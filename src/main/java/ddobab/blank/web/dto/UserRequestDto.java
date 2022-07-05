@@ -1,21 +1,18 @@
 package ddobab.blank.web.dto;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Getter
 @NoArgsConstructor
-public class UserUpdateRequestDto {
+public class UserRequestDto {
 
     private String nickname;
 //    private String profileImgUrl;
 
     @Builder
-    public UserUpdateRequestDto(String nickname) {
+    public UserRequestDto(String nickname) {
         this.nickname = nickname;
     }
 }
