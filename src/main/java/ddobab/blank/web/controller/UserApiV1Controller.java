@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,16 +44,17 @@ public class UserApiV1Controller {
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
+    @PreAuthorize("@webSecurity.checkAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
     public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
                                                   @LoginUser SessionUserDto loginUser) {
         //bean validation 점검
-        if(no.equals(loginUser.getNo())) {
+//        if(no.equals(loginUser.getNo())) {
             UserResponseDto data = userService.update(no, requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
-        } else {
-            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
-        }
+//        } else {
+//            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
+//        }
     }
 
     @DeleteMapping("/{no}/delete")

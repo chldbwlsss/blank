@@ -29,11 +29,10 @@ public class UserService {
 
     @Transactional
     public UserResponseDto update(Long no, UserUpdateRequestDto requestDto) {
-        User user = userRepository.findById(no)
-                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
-        user.updateUser(requestDto.getNickname());
-
-        return new UserResponseDto(user);
+            User user = userRepository.findById(no)
+                    .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
+            user.updateUser(requestDto.getNickname());
+            return new UserResponseDto(user);
     }
 
     @Transactional

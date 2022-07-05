@@ -6,6 +6,7 @@ import ddobab.blank.web.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +27,13 @@ public class GlobalExAdvice {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ResponseDto<?>> unauthorized(UnauthorizedException e) {
+        ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
+
+        return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseDto<?>> accessDeny(UnauthorizedException e) {
         ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
 
         return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.UNAUTHORIZED);
