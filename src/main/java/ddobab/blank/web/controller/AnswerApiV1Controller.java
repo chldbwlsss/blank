@@ -1,6 +1,5 @@
 package ddobab.blank.web.controller;
 
-import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;

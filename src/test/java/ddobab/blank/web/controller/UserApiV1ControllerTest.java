@@ -76,12 +76,11 @@ class UserApiV1ControllerTest {
     @Test
     void 유저_프로필_수정() throws Exception {
 
-
-        UserRequestDto userUpdateRequestDto = UserRequestDto.builder()
-                                                                        .nickname("변경된테스트유저")
-                                                                        .build();
+        UserRequestDto userRequestDto = UserRequestDto.builder()
+                                                    .nickname("변경된테스트유저")
+                                                    .build();
         Gson gson = new Gson();
-        String requestBody = gson.toJson(userUpdateRequestDto);
+        String requestBody = gson.toJson(userRequestDto);
         UserResponseDto userResponseDto = new UserResponseDto(1L, "변경된테스트유저", "test-email@gmail.com", "test_img_url");
 
         given(userService.update(eq(1L), any(UserRequestDto.class)))
