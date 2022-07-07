@@ -1,10 +1,7 @@
 package ddobab.blank.domain.user;
 
 import ddobab.blank.domain.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="USERS")
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class User extends BaseTimeEntity {
 

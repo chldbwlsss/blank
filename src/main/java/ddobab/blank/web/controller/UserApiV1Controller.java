@@ -54,7 +54,7 @@ public class UserApiV1Controller {
     }
 
     @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
-    @DeleteMapping("/{no}/delete")
+    @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //잘못된 타입으로 요청
         userService.delete(no);
