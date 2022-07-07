@@ -35,11 +35,11 @@ public class AnswerService {
                                         .build();
         Answer savedAnswer = answerRepository.save(toSaveAnswer);
         //답변사진 저장해야됨!!!
-        return new AnswerResponseDto(answerRepository.findById(savedAnswer.getNo()).orElseThrow(()->new IllegalStateException("답변 저장이 완료되지 않았습니다.")));
+        return new AnswerResponseDto(savedAnswer);
     }
 
-    public AnswerSliceResponseDto findAnswers(PageRequest pageRequest, Long no) {
-        Slice<Answer> slice = answerRepository.findByQuestionNoOrderByCreatedDateDesc(no, pageRequest);
+    public AnswerSliceResponseDto findAnswers(PageRequest pageRequest, Long questionNo) {
+        Slice<Answer> slice = answerRepository.findByQuestionNoOrderByCreatedDateDesc(questionNo, pageRequest);
         List<AnswerResponseDto> content = slice.getContent().stream()
                                                             .map(AnswerResponseDto::new).collect(Collectors.toList());
         return new AnswerSliceResponseDto(content,slice.hasNext());
@@ -65,7 +65,7 @@ public class AnswerService {
 //                        .answer(answer)
 //                        .answerImgUrl(imgUrl)
 //                        .build()));     !!!나중에 주석 제거
-        return new AnswerResponseDto(answerRepository.findById(no).orElseThrow(()->new IllegalStateException("답변 변경이 완료되지 않았습니다.")));
+        return new AnswerResponseDto(answer);
     }
 
     public void delete(Long no) {

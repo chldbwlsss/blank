@@ -1,6 +1,7 @@
 package ddobab.blank.domain.user;
 
 import ddobab.blank.domain.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @DynamicInsert
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="USERS")
 @Entity
 public class User extends BaseTimeEntity {

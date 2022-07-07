@@ -3,6 +3,7 @@ package ddobab.blank.domain.question;
 
 import ddobab.blank.domain.BaseTimeEntity;
 import ddobab.blank.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @DynamicInsert
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Question extends BaseTimeEntity {
 
