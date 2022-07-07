@@ -111,8 +111,8 @@ class UserApiV1ControllerTest {
         mockMvc.perform(delete("/api/v1/user/1").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isEmpty())
-                .andExpect(jsonPath("$.error").isEmpty()
-                ).andDo(print());
+                .andExpect(jsonPath("$.error").isEmpty())
+                .andDo(print());
         verify(userService).delete(1L);
     }
 
