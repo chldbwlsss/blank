@@ -1,5 +1,6 @@
 package ddobab.blank.web.controller;
 
+
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
@@ -53,7 +54,7 @@ public class UserApiV1Controller {
     }
 
     @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
-    @DeleteMapping("/{no}")
+    @DeleteMapping("/{no}/delete")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //잘못된 타입으로 요청
         userService.delete(no);
