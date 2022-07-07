@@ -4,17 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
-public class AnswerUpdateRequestDto {
+public class AnswerRequestDto {
 
+    private Long questionNo;
     private String content;
-//    private List<String> answerImgUrls;
+//    private List<MultipartFile> answerImgFiles;
 
     @Builder
-    public AnswerUpdateRequestDto(String content) {
+    public AnswerRequestDto(String content, Long questionNo) {
         this.content = content;
+        this.questionNo = questionNo;
     }
 }

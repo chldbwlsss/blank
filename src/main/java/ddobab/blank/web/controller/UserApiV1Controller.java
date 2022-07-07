@@ -1,7 +1,6 @@
 package ddobab.blank.web.controller;
 
 
-import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
@@ -12,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class UserApiV1Controller {
             log.info("[GET] LOGIN-USER : {}", loginUser);
             return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), HttpStatus.OK);
         }else{
-            throw new UnauthorizedException("데이터 접근 권한이 없습니다.");
+            throw new AccessDeniedException("데이터 접근 권한이 없습니다.");
         }
 
     }
@@ -43,27 +44,21 @@ public class UserApiV1Controller {
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
+    @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserUpdateRequestDto requestDto,
+    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserRequestDto requestDto,
                                                   @LoginUser SessionUserDto loginUser) {
         //bean validation 점검
-        if(no.equals(loginUser.getNo())) {
-            UserResponseDto data = userService.update(no, requestDto);
-            return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
-        } else {
-            throw new UnauthorizedException("데이터 변경 권한이 없습니다.");
-        }
+        UserResponseDto data = userService.update(no, requestDto);
+        return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/{no}/delete")
+    @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
+    @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //잘못된 타입으로 요청
-        if(no.equals(loginUser.getNo())) {
-            userService.delete(no);
-            return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
-        } else {
-            throw new UnauthorizedException("데이터 삭제 권한이 없습니다.");
-        }
+        userService.delete(no);
+        return new ResponseEntity<>(new ResponseDto<>(null, null), HttpStatus.OK);
     }
 
     @GetMapping("/{no}/question/top3")
