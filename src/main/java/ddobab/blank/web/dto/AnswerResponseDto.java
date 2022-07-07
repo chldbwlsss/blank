@@ -1,10 +1,12 @@
 package ddobab.blank.web.dto;
 
 import ddobab.blank.domain.answer.Answer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class AnswerResponseDto {
 

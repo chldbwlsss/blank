@@ -1,7 +1,5 @@
 package ddobab.blank.web.controller;
 
-
-import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.security.annotation.LoginUser;
 import ddobab.blank.security.dto.SessionUserDto;
 import ddobab.blank.service.answer.AnswerService;
@@ -12,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +32,7 @@ public class UserApiV1Controller {
             log.info("[GET] LOGIN-USER : {}", loginUser);
             return new ResponseEntity<>(new ResponseDto<SessionUserDto>(loginUser,null), HttpStatus.OK);
         }else{
-            throw new UnauthorizedException("데이터 접근 권한이 없습니다.");
+            throw new AccessDeniedException("데이터 접근 권한이 없습니다.");
         }
 
     }
@@ -54,7 +53,7 @@ public class UserApiV1Controller {
     }
 
     @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
-    @DeleteMapping("/{no}/delete")
+    @DeleteMapping("/{no}")
     public ResponseEntity<ResponseDto<?>> delete(@LoginUser SessionUserDto loginUser, @PathVariable Long no) {
         //잘못된 타입으로 요청
         userService.delete(no);
