@@ -34,7 +34,7 @@ public class QuestionService {
                                             .build();
         Question savedQuestion = questionRepository.save(toSaveQuestion);
         //질문이미지 저장해야됨!!!
-        return new QuestionResponseDto(questionRepository.findById(savedQuestion.getNo()).orElseThrow(()->new IllegalStateException("질문 저장이 완료되지 않았습니다.")));
+        return new QuestionResponseDto(savedQuestion);
 
     }
 
@@ -61,7 +61,7 @@ public class QuestionService {
 //                        .question(question)
 //                        .questionImgUrl(imgUrl)
 //                        .build()));     !!!나중에 주석 제거
-        return new QuestionResponseDto(questionRepository.findById(no).orElseThrow(()->new IllegalStateException("질문 변경이 완료되지 않았습니다. QUESTION-NO"+no)));
+        return new QuestionResponseDto(question);
     }
 
     @Transactional

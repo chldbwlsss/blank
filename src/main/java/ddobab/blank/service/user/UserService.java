@@ -32,7 +32,7 @@ public class UserService {
             User user = userRepository.findById(no)
                     .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다. USER-NO:"+no));
             user.updateUser(requestDto.getNickname());
-            return new UserResponseDto(user);
+            return new UserResponseDto(userRepository.findById(no).orElseThrow(()->new IllegalStateException("프로필 변경이 완료되지 않았습니다.")));
     }
 
     @Transactional
