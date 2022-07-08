@@ -3,9 +3,7 @@ package ddobab.blank.domain.question;
 
 import ddobab.blank.domain.BaseTimeEntity;
 import ddobab.blank.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -14,6 +12,8 @@ import javax.persistence.*;
 @DynamicInsert
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class Question extends BaseTimeEntity {
 

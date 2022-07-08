@@ -1,15 +1,13 @@
 package ddobab.blank.exception.advice;
 
-import ddobab.blank.exception.customException.UnauthorizedException;
 import ddobab.blank.exception.dto.ErrorDto;
 import ddobab.blank.web.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.NoSuchElementException;
 
@@ -24,8 +22,8 @@ public class GlobalExAdvice {
         return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ResponseDto<?>> unauthorized(UnauthorizedException e) {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseDto<?>> accessDeny(AccessDeniedException e) {
         ErrorDto error = new ErrorDto("CLIENT", e.getMessage());
 
         return new ResponseEntity<>(new ResponseDto<>(null, error), HttpStatus.UNAUTHORIZED);
