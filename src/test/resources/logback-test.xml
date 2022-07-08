@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="60 seconds">
-    <springProfile name="dev">
-        <property resource="application-dev.properties"/>
-    </springProfile>
-    <springProfile name="prod">
-        <property resource="application-prod.properties"/>
+    <springProfile name="default">
+        <property resource="application.properties"/>
     </springProfile>
 
     <property name="LOG_PATH" value="${log.config.path}"/>
@@ -35,17 +32,9 @@
         </encoder>
     </appender>
 
-    <springProfile name="dev">
-        <root level="DEBUG">
-            <appender-ref ref="consoleAppender"/>
-        </root>
-    </springProfile>
-
-    <springProfile name="prod">
+    <springProfile name="default">
         <root level="INFO">
             <appender-ref ref="consoleAppender"/>
-            <appender-ref ref="fileAppender"/>
         </root>
     </springProfile>
-
 </configuration>
