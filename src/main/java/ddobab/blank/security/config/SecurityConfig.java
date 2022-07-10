@@ -2,6 +2,7 @@ package ddobab.blank.security.config;
 
 import ddobab.blank.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +17,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfig{
+
+    @Value("${const.url.front_server}")
+    private String frontServerUrl;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -39,7 +43,7 @@ public class SecurityConfig{
                     .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
-                        .defaultSuccessUrl("http://localhost:3000")
+                        .defaultSuccessUrl(frontServerUrl)
                         .userInfoEndpoint()
                             .userService(customOAuth2UserService);
         return http.build();
@@ -48,7 +52,7 @@ public class SecurityConfig{
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin(frontServerUrl);
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);
