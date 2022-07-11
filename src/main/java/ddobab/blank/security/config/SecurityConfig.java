@@ -43,6 +43,9 @@ public class SecurityConfig{
                     .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
+                        .redirectionEndpoint()
+                            .baseUri("/api/login/oauth2/callback/*")
+                        .and()
                         .defaultSuccessUrl(frontServerUrl)
                         .userInfoEndpoint()
                             .userService(customOAuth2UserService);
