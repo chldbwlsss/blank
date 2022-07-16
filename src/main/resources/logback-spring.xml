@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-    <property name="LOG_PATH" value="../../log/blank_backend"/>
+    <property name="LOG_PATH" value="log/blank_backend"/>
     <property name="LOG_PATTERN" value="%d{yyyy:MM:dd HH:mm:ss.SSS} %-5level --- [%thread] %logger{30} : %msg %n"/>
 
     <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
