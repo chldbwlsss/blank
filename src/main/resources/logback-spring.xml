@@ -47,7 +47,7 @@
     </springProfile>
 
     <springProfile name="prod">
-        <root level="ERROR">
+        <root level="INFO">
             <appender-ref ref="consoleAppender"/>
             <appender-ref ref="fileAppenderProd"/>
         </root>
