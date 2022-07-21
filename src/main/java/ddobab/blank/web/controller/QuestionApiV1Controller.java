@@ -54,6 +54,7 @@ public class QuestionApiV1Controller {
     @GetMapping("/category")
     public ResponseEntity<ResponseDto<QuestionCategory[]>> getCategoryList() {
         QuestionCategory[] data = QuestionCategory.values();
+        log.info("CATEGORY API");
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.OK);
     }
 
