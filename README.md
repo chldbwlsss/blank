@@ -1,32 +1,34 @@
 # 프로젝트 소개
 
 무엇이든 간단하게 물어보고 답할 수 있는 커뮤니티 사이트
-
 React + Springboot Web Application
+
+site: https://blank.quest
 
 
 # 개발환경
 
-BACK-END
-- JAVA JDK11
-- springboot 2.7.0
-- gradle
-- h2 (test)
-- mariadb (production)
-- spring data jpa
-- spring security
-FRONT-END
-- typescript
-- react
-- styled-components
-DEPLOY
-- git
-- aws ec2
-- aws rds
-- nginx
-TOOLS
-- intellij
-- VSC
+- BACK-END
+    - JAVA JDK11
+    - springboot 2.7.0
+    - gradle
+    - h2 (test)
+    - mariadb (production)
+    - spring data jpa
+    - spring security
+- FRONT-END
+    - typescript
+    - react
+    - styled-components
+- DEPLOY
+    - git
+    - aws ec2
+    - aws rds
+    - nginx
+- TOOLS
+    - intellij
+    - VSC
+
 
 # 구현 기능
 
@@ -40,6 +42,19 @@ TOOLS
     - 질문 글 검색 기능 (키워드 별, 카테고리 별 검색)
 - 질문 글 조회 수 확인 기능
 - 최근 3일 이내 조회 수 상위 5개 질문글 노출 기능
+
+# 프론트엔드 서버 접근 URL
+
+| url | name | description |
+| --- | --- | --- |
+| / | 홈페이지 |  |
+| /login | 로그인 페이지 | 소셜 로그인을 위한 링크 페이지 |
+| /questions | 질문 검색 페이지 | 질문 검색 및 조회수 높은 질문을 확인할 수 있는 페이지 |
+| /questions/{no} | 질문 상세페이지 | 질문글 상세 페이지, 답변글 작성 가능 |
+| /user/{no} | 유저 프로필 |  |
+
+
+# REST API 명세서
 
 ### HOST
 
@@ -133,50 +148,23 @@ https://blank.quest
 | DB | DB관련 오류 |
 | CLIENT | 클라이언트 오류 |
 
-| Method | URI | Description | request detail | response detail |
-| --- | --- | --- | --- | --- |
-| POST | /api/v1/question | 질문 등록 | json: 질문 등록/수정
-header: “Content-Type”:”application/json”
-jsessionid cookie 필요 | 201 CREATED
-json: 질문 |
-| GET | /api/v1/question/{no} | 질문 조회 |  | 200 OK
-json: 질문 |
-| PUT | /api/v1/question/{no} | 질문 수정 | json: 질문 등록/수정
-header: “Content-Type”:”application/json”
-jsessionid cookie 필요 | 202 ACCEPTED
-json: 질문 |
-| DELETE | /api/v1/question/{no} | 질문 삭제 | jsessionid cookie 필요 | 200 OK |
-| GET | /api/v1/question/category | 질문 카테고리  |  | 200 OK
-json: 카테고리 |
-| GET | /api/v1/question/top5 | 오늘 포함 최근 3일 기준 조회수 top5 |  | 200 OK
-json: List<질문> |
-| POST | /api/v1/answer | 답변 등록 | json: 답변 등록/수정
-header: “Content-Type”:”application/json”
-jsessionid cookie 필요 | 201 CREATED
-json: 답변 |
-| GET | /api/v1/answer | 질문에 대한 답변 | parameters:
-questionNo(Integer), page(Integer), size(Integer) | 200 OK
-json: 답변 리스트(페이징) |
-| PUT | /api/v1/answer/{no} | 답변 수정 | json: 답변 등록/수정
-header: “Content-Type”:”application/json”
-jsessionid cookie 필요 | 202 ACCEPTED
-json: 답변 |
-| DELETE | /api/v1/answer/{no} | 답변 삭제 | jsessionid cookie 필요 | 200 OK |
-| GET | /api/v1/user | 세션에 담긴 로그인  된 사용자 정보 | jsessionid cookie 필요 | 200 OK
-json: 유저 |
-| GET | /api/v1/user/{no} | 유저 프로필 |  | 200 OK
-json: 유저 |
-| PUT | /api/v1/user/{no} | 유저 프로필 수정 | json: 유저 수정
-header: “Content-Type”:”application/json”
-jsessionid cookie 필요 | 202 ACCEPTED
-json: 유저 |
-| DELETE | /api/v1/user/{no} | 유저 정보 삭제(탈퇴) | jsessionid cookie 필요 | 200 OK |
-| GET | /api/v1/user/{no}/question/top3 | 유저 질문 최신 top3 |  | 200 OK
-json: List<질문> |
-| GET | /api/v1/user/{no}/answer/top3 | 유저 답변 최신 top3 |  | 200 OK
-json: List<답변> |
-| GET | /api/v1/search/question | 검색된 질문 리스트 | parameters:
-categoryValue(String) word(String), page( Integer), size(Integer) | 200 OK
-json: 질문 리스트(페이징) 
-
-
+### SUMMARY
+| Method | URI | Description | request | credentials | response detail |
+| --- | --- | --- | --- | --- | --- |
+| POST | /api/v1/question | 질문 등록 | json: 질문 등록/수정 | O | 201 CREATED / json: 질문 |
+| GET | /api/v1/question/{no} | 질문 조회 |  |  | 200 OK / data: 질문 |
+| PUT | /api/v1/question/{no} | 질문 수정 | json: 질문 등록/수정 | O | 202 ACCEPTED / data: 질문 |
+| DELETE | /api/v1/question/{no} | 질문 삭제 |  | O | 200 OK |
+| GET | /api/v1/question/category | 질문 카테고리  |  |  | 200 OK / data: 카테고리 |
+| GET | /api/v1/question/top5 | 오늘 포함 최근 3일 기준 조회수 top5 |  |  | 200 OK / data: List<질문> |
+| POST | /api/v1/answer | 답변 등록 | json: 답변 등록/수정 | O | 201 CREATED / data: 답변 |
+| GET | /api/v1/answer | 질문에 대한 답변 | parameters: questionNo(Integer), page(Integer), size(Integer) |  | 200 OK / data: 답변 리스트(페이징) |
+| PUT | /api/v1/answer/{no} | 답변 수정 | json: 답변 등록/수정 | O | 202 ACCEPTED / data: 답변 |
+| DELETE | /api/v1/answer/{no} | 답변 삭제 |  | O | 200 OK |
+| GET | /api/v1/user | 세션에 담긴 로그인  된 사용자 정보 |  | O | 200 OK / data: 유저 |
+| GET | /api/v1/user/{no} | 유저 프로필 |  |  | 200 OK / data: 유저 |
+| PUT | /api/v1/user/{no} | 유저 프로필 수정 | json: 유저 수정 | O | 202 ACCEPTED / data: 유저 |
+| DELETE | /api/v1/user/{no} | 유저 정보 삭제(탈퇴) |  | O | 200 OK |
+| GET | /api/v1/user/{no}/question/top3 | 유저 질문 최신 top3 |  |  | 200 OK / data: List<질문> |
+| GET | /api/v1/user/{no}/answer/top3 | 유저 답변 최신 top3 |  |  | 200 OK / data: List<답변> |
+| GET | /api/v1/search/question | 검색된 질문 리스트 | parameters: categoryValue(String), word(String), page( Integer), size(Integer) |  | 200 OK / data: 질문 리스트(페이징) |
