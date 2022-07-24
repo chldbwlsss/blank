@@ -3,7 +3,7 @@
 무엇이든 간단하게 물어보고 답할 수 있는 커뮤니티 사이트
 React + Springboot Web Application
 
-site: https://blank.quest
+site: https://blank.quest   https://www.blank.monster
 
 
 # 개발환경
