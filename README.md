@@ -59,6 +59,7 @@ site: https://blank.quest   https://www.blank.monster
 ### HOST
 
 https://blank.quest
+https://www.blank.monster
 
 ### REQUEST
 
