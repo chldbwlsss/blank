@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/answer")
@@ -21,7 +22,7 @@ public class AnswerApiV1Controller {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody AnswerRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody @Valid AnswerRequestDto requestDto) {
         //bean validation 필요
             AnswerResponseDto data = answerService.save(loginUser.getNo(), requestDto);
             return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
@@ -37,7 +38,7 @@ public class AnswerApiV1Controller {
 
     @PreAuthorize("@webSecurity.checkAnswerAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody AnswerRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<AnswerResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody @Valid AnswerRequestDto requestDto) {
        //bean validation
         AnswerResponseDto data = answerService.update(no, requestDto);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);

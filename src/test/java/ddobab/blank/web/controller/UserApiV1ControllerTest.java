@@ -10,6 +10,7 @@ import ddobab.blank.web.dto.AnswerResponseDto;
 import ddobab.blank.web.dto.QuestionResponseDto;
 import ddobab.blank.web.dto.UserResponseDto;
 import ddobab.blank.web.dto.UserRequestDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,8 @@ class UserApiV1ControllerTest {
 
     @WithMockUser
     @Test
-    void 유저_프로필_수정() throws Exception {
+    @DisplayName("유저 수정 성공")
+    void updateSuccess() throws Exception {
 
         //given
         UserRequestDto userRequestDto = UserRequestDto.builder()
@@ -99,6 +101,31 @@ class UserApiV1ControllerTest {
                         jsonPath("$.error").isEmpty()
                 ).andDo(print());
         verify(userService).update(eq(1L), any(UserRequestDto.class));
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("유저 수정 실패 : 닉네임은 빈 칸 불가")
+    void updateFailure1() throws Exception {
+
+        //given
+        UserRequestDto userRequestDto = UserRequestDto.builder()
+                .nickname("")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(userRequestDto);
+
+        //when, then
+        mockMvc.perform(put("/api/v1/user/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("닉네임은 빈 칸일 수 없습니다."))
+                .andDo(print());
+        then(userService).shouldHaveNoInteractions();
     }
 
     @WithMockUser

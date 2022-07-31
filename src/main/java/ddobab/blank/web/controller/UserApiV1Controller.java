@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -46,9 +47,8 @@ public class UserApiV1Controller {
 
     @PreAuthorize("@webSecurity.checkUserAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody UserRequestDto requestDto,
+    public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long no, @RequestBody @Valid UserRequestDto requestDto,
                                                   @LoginUser SessionUserDto loginUser) {
-        //bean validation 점검
         UserResponseDto data = userService.update(no, requestDto);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
     }

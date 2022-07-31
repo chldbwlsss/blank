@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -23,8 +24,7 @@ public class QuestionApiV1Controller {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<QuestionResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody QuestionRequestDto requestDto) {
-        //bean validation 필요
+    public ResponseEntity<ResponseDto<QuestionResponseDto>> save(@LoginUser SessionUserDto loginUser, @RequestBody @Valid QuestionRequestDto requestDto) {
         QuestionResponseDto data = questionService.save(loginUser.getNo(), requestDto);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.CREATED);
     }
@@ -37,7 +37,7 @@ public class QuestionApiV1Controller {
 
     @PreAuthorize("@webSecurity.checkQuestionAuthority(#no, #loginUser)")
     @PutMapping("/{no}")
-    public ResponseEntity<ResponseDto<QuestionResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody QuestionRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<QuestionResponseDto>> update(@LoginUser SessionUserDto loginUser, @PathVariable Long no, @RequestBody @Valid QuestionRequestDto requestDto) {
         //bean valid
         QuestionResponseDto data = questionService.update(no, requestDto);
         return new ResponseEntity<>(new ResponseDto<>(data, null), HttpStatus.ACCEPTED);
