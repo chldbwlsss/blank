@@ -9,6 +9,7 @@ import ddobab.blank.web.dto.AnswerResponseDto;
 import ddobab.blank.web.dto.AnswerRequestDto;
 import ddobab.blank.web.dto.AnswerSliceResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AnswerService {
@@ -34,7 +36,7 @@ public class AnswerService {
                                         .content(requestDto.getContent())
                                         .build();
         Answer savedAnswer = answerRepository.save(toSaveAnswer);
-        //답변사진 저장해야됨!!!
+        log.info("[SAVE ANSWER] no: {}", savedAnswer.getNo());
         return new AnswerResponseDto(savedAnswer);
     }
 
@@ -42,11 +44,13 @@ public class AnswerService {
         Slice<Answer> slice = answerRepository.findByQuestionNoOrderByCreatedDateDesc(questionNo, pageRequest);
         List<AnswerResponseDto> content = slice.getContent().stream()
                                                             .map(AnswerResponseDto::new).collect(Collectors.toList());
+        log.info("[READ ANSWERS] questionNo: {}, pageNum: {} ", questionNo, pageRequest.getPageNumber());
         return new AnswerSliceResponseDto(content,slice.hasNext());
     }
 
     public List<AnswerResponseDto> findTop3ByUserNo(Long no) {
         List<Answer> answerTop3List = answerRepository.findTop3ByUserNoOrderByCreatedDateDesc(no);
+        log.info("[READ TOP3 ANSWERS] userNo: {}", no);
         return answerTop3List.stream()
                               .map(AnswerResponseDto::new)
                               .collect(Collectors.toList());
@@ -57,7 +61,7 @@ public class AnswerService {
         Answer answer = answerRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO"+no));
         answer.updateAnswer(requestDto.getContent());
-
+        log.info("[UDPATE ANSWER] answerNo: {}", no);
 //        answerImgRepository.deleteByAnswerNo(no);
 //        requestDto.getAnswerImgUrls()
 //                .stream()
@@ -71,10 +75,12 @@ public class AnswerService {
     public void delete(Long no) {
         answerRepository.delete(answerRepository.findById(no)
                 .orElseThrow(() -> new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO:"+no)));
+        log.info("[DELETE ANSWER] no: {}", no);
     }
 
     public Long getAnswerWriter(Long no){
         Answer answer = answerRepository.findById(no).orElseThrow(()->new IllegalArgumentException("해당 답변을 찾을 수 없습니다. ANSWER-NO:"+no));
+        log.info("[READ ANSWERWRITER] userNo: {}", answer.getUser().getNo());
         return answer.getUser().getNo();
     }
 }
