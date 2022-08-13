@@ -6,6 +6,7 @@ import ddobab.blank.service.answer.AnswerService;
 import ddobab.blank.web.dto.AnswerRequestDto;
 import ddobab.blank.web.dto.AnswerResponseDto;
 import ddobab.blank.web.dto.AnswerSliceResponseDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,7 +40,8 @@ class AnswerApiV1ControllerTest {
 
     @WithMockUser
     @Test
-    void 답변_생성() throws Exception {
+    @DisplayName("답변 저장 성공")
+    void saveSuccess() throws Exception {
         //given
         AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
                 .content("테스트내용")
@@ -62,6 +64,80 @@ class AnswerApiV1ControllerTest {
                 .andExpect(jsonPath("$.data.writerNo").value(answerResponseDto.getWriterNo()))
                 .andDo(print());
         verify(answerService).save(any(),any(AnswerRequestDto.class));
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 질문 번호는 필수")
+    void saveFailure1() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("테스트내용")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(post("/api/v1/answer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("질문 번호는 필수입니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 답변 내용은 필수")
+    void saveFailure2() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("")
+                .questionNo(1L)
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(post("/api/v1/answer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("답변 내용은 빈 칸일 수 없습니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 답변 내용은 500자 이하")
+    void saveFailure3() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit")
+                .questionNo(1L)
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(post("/api/v1/answer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("답변은 500자 이하로 작성 가능합니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
     }
 
     @WithMockUser
@@ -90,7 +166,8 @@ class AnswerApiV1ControllerTest {
 
     @WithMockUser
     @Test
-    void 답변_수정() throws Exception {
+    @DisplayName("답변 수정 성공")
+    void updateSuccess() throws Exception {
         //given
         AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
                 .questionNo(1L)
@@ -113,6 +190,81 @@ class AnswerApiV1ControllerTest {
                 .andExpect(jsonPath("$.data.writerNo").value(answerResponseDto.getWriterNo()))
                 .andDo(print());
         verify(answerService).update(eq(1L), any(AnswerRequestDto.class));
+    }
+
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 질문 번호는 필수")
+    void updateFailure1() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("테스트내용")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(put("/api/v1/answer/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("질문 번호는 필수입니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 답변 내용은 필수")
+    void updateFailure2() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("")
+                .questionNo(1L)
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(put("/api/v1/answer/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("답변 내용은 빈 칸일 수 없습니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @Test
+    @DisplayName("답변 저장 실패 : 답변 내용은 500자 이하")
+    void updateFailure3() throws Exception {
+        //given
+        AnswerRequestDto answerRequestDto = AnswerRequestDto.builder()
+                .content("1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit")
+                .questionNo(1L)
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(answerRequestDto);
+
+        //when, then
+        mockMvc.perform(put("/api/v1/answer/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.error.errorCode").value("CLIENT"))
+                .andExpect(jsonPath("$.error.message").value("답변은 500자 이하로 작성 가능합니다."))
+                .andDo(print());
+        then(answerService).shouldHaveNoInteractions();
     }
 
     @WithMockUser
