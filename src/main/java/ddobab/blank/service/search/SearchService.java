@@ -33,6 +33,7 @@ public class SearchService {
         List<QuestionResponseDto> content = slice.getContent().stream()
                                                                 .map(QuestionResponseDto::new)
                                                                 .collect(Collectors.toList());
+        log.info("[SEARCH QUESTIONS] word:{}, category:{}, pageNo: {}", word, categoryValue, pageRequest.getPageNumber());
         return new QuestionSliceResponseDto(content, slice.hasNext());
     }
 }
